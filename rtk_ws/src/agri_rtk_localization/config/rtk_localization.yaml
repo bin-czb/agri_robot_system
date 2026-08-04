@@ -1,0 +1,62 @@
+rtk_global_localizer:
+  ros__parameters:
+    # ROS_RTK/um982_ntrip 的标准输出。
+    input_fix_topic: /fix
+    input_quality_topic: /rtk/fix_quality
+
+    # 导航、融合和可视化输出。
+    pose_topic: /global_pose/rtk
+    selected_topic: /global_pose/selected
+    odometry_topic: /odometry/rtk
+    path_topic: /rtk/path
+    marker_topic: /rtk/marker
+    datum_topic: /rtk/datum
+    diagnostics_topic: /rtk/diagnostics
+    output_frame: local_origin
+    child_frame: gps_link
+
+    # AOA 与 RTK 后续为互斥模式；启用 RTK 时才允许发布 selected。
+    publish_selected: true
+
+    # 正式导航只接受 NMEA quality=4，即 RTK_FIXED。
+    require_rtk_fixed: true
+    fixed_quality: 4
+    quality_timeout_s: 2.0
+    fix_timeout_s: 2.0
+
+    # auto 仅供早期测试。接入正射影像时必须改为 manual，并填写与
+    # 正射地图一致的 WGS-84 ENU 原点。
+    datum_mode: auto
+    datum_latitude: 0.0
+    datum_longitude: 0.0
+    datum_altitude: 0.0
+    auto_datum_samples: 20
+    auto_datum_max_spread_m: 0.20
+
+    # 地面导航默认只输出平面位置；原始海拔仍保留在 /fix 和 /rtk/datum。
+    two_d_mode: true
+
+    # 轻量平滑和运动学门控。它只抑制异常点，不代替 EKF。
+    position_alpha: 0.8
+    max_jump_m: 3.0
+    max_speed_mps: 2.0
+    jump_slack_m: 0.30
+    gate_dt_max_s: 1.0
+
+    # 单天线静止时没有航向；移动超过该距离后才按轨迹切线估计 course。
+    course_min_distance_m: 0.30
+    course_yaw_variance: 0.25
+    unknown_yaw_variance: 1000000.0
+
+    # RViz 轨迹有界保存，避免长时间运行持续增长内存。
+    path_min_distance_m: 0.05
+    path_max_poses: 2000
+    marker_scale_m: 0.30
+
+    # 当 /fix 没有协方差时，按解状态给出保守默认值。
+    fixed_horizontal_sigma_m: 0.03
+    fixed_vertical_sigma_m: 0.08
+    float_horizontal_sigma_m: 0.50
+    float_vertical_sigma_m: 1.00
+    other_horizontal_sigma_m: 3.00
+    other_vertical_sigma_m: 5.00

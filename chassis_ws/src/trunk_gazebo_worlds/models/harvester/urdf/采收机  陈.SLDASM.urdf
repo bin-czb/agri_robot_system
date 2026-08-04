@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="采收机  陈.SLDASM">
+  <link
+    name="body">
+    <inertial>
+      <origin
+        xyz="0 5.55111512312578E-17 0.025"
+        rpy="0 0 0" />
+      <mass
+        value="71.4797837281486" />
+      <inertia
+        ixx="5.49836700184915"
+        ixy="-2.35036688647132E-16"
+        ixz="-2.08166817117217E-17"
+        iyy="13.2392472761819"
+        iyz="8.74941883776511E-18"
+        izz="18.707831034811" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://采收机  陈.SLDASM/meshes/body.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://采收机  陈.SLDASM/meshes/body.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="camera_body">
+    <inertial>
+      <origin
+        xyz="-0.015 -5.55111512312578E-17 5.55111512312578E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.0900000000000001" />
+      <inertia
+        ixx="8.175E-05"
+        ixy="-1.62935224090742E-20"
+        ixz="4.2351647362715E-21"
+        iyy="1.35E-05"
+        iyz="2.34939340049888E-19"
+        izz="8.175E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://采收机  陈.SLDASM/meshes/camera_body.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://采收机  陈.SLDASM/meshes/camera_body.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="camera_joint"
+    type="fixed">
+    <origin
+      xyz="1.1775 0.00026991 0.383"
+      rpy="0 0 0" />
+    <parent
+      link="body" />
+    <child
+      link="camera_body" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="wheel1_body">
+    <inertial>
+      <origin
+        xyz="5.10702591327572E-15 0.0516193137078337 -2.09155609498524E-14"
+        rpy="0 0 0" />
+      <mass
+        value="1.28953895260844" />
+      <inertia
+        ixx="0.00256684437461673"
+        ixy="-5.13765456367088E-17"
+        ixz="-3.52664462013211E-06"
+        iyy="0.00246817887169982"
+        iyz="1.92599783276012E-16"
+        izz="0.00255802112794319" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://采收机  陈.SLDASM/meshes/wheel1_body.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://采收机  陈.SLDASM/meshes/wheel1_body.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheel1_joint"
+    type="revolute">
+    <origin
+      xyz="0.942 -0.61448 0.023"
+      rpy="0 0 0" />
+    <parent
+      link="body" />
+    <child
+      link="wheel1_body" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="wheel2_body">
+    <inertial>
+      <origin
+        xyz="1.7874590696465E-14 -0.0516193137078337 -1.20112253476634E-14"
+        rpy="0 0 0" />
+      <mass
+        value="1.28953895260844" />
+      <inertia
+        ixx="0.00255678554815743"
+        ixy="1.63833113620075E-16"
+        ixz="9.34860155586062E-08"
+        iyy="0.00246817887169982"
+        iyz="-1.13690895355625E-16"
+        izz="0.00256807995440249" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://采收机  陈.SLDASM/meshes/wheel2_body.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://采收机  陈.SLDASM/meshes/wheel2_body.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheel2_joint"
+    type="revolute">
+    <origin
+      xyz="0.942 0.61468 0.023"
+      rpy="0 0 0" />
+    <parent
+      link="body" />
+    <child
+      link="wheel2_body" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>

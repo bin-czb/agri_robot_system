@@ -1,0 +1,138 @@
+<sdf version='1.9'>
+  <!--
+    Based on Fuel world:
+      https://app.gazebosim.org/gokhul/fuel/worlds/hexarotor%20in%20the%20forest
+
+    Changes vs original:
+    - Removed UAV model and Sensors system (we only need environment).
+    - Kept the "forest" look (grass patches + OpenRobotics trees).
+    - Randomized tree row alignment (non-linear) to test navigation robustness.
+    - Enhanced lighting (brighter) and disabled shadows.
+  -->
+  <world name='hexarotor_forest_orchard_world'>
+    <physics name='4ms' type='ignored'>
+      <max_step_size>0.0040000000000000001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <plugin name='ignition::gazebo::systems::Physics' filename='ignition-gazebo-physics-system'/>
+    <plugin name='ignition::gazebo::systems::Sensors' filename='ignition-gazebo-sensors-system'>
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='ignition-gazebo-scene-broadcaster-system'/>
+    <plugin name='ignition::gazebo::systems::UserCommands' filename='ignition-gazebo-user-commands-system'/>
+
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>38.775593600000001</latitude_deg>
+      <longitude_deg>-9.1375554000000001</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    
+    <!-- Scene: Brighter, no shadows -->
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.7 0.7 0.8 1</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <!-- Sun: Brighter, no shadows -->
+    <light name='sun' type='directional'>
+      <pose>0 0 10 0 -0 0</pose>
+      <cast_shadows>false</cast_shadows>
+      <intensity>1.2</intensity>
+      <direction>-0.5 0.1 -0.9</direction>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <linear>0.01</linear>
+        <constant>0.90000000000000002</constant>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+    </light>
+
+    <!-- Robot: bb_robot (tracked/skid-steer) -->
+    <include>
+      <uri>model://bb_robot</uri>
+      <name>bb_robot</name>
+      <pose>-12 12 0.5 0 0 0</pose>
+    </include>
+
+    <!-- Ground: grass patch tiles (15m x 15m each) -->
+    <include><uri>model://grasspatch</uri><name>grass_00</name><pose>-12.0 -3.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_10</name><pose>  3.0 -3.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_20</name><pose> 18.0 -3.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_30</name><pose> 33.0 -3.0 0 0 0 0</pose></include>
+
+    <include><uri>model://grasspatch</uri><name>grass_01</name><pose>-12.0 12.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_11</name><pose>  3.0 12.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_21</name><pose> 18.0 12.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_31</name><pose> 33.0 12.0 0 0 0 0</pose></include>
+
+    <include><uri>model://grasspatch</uri><name>grass_02</name><pose>-12.0 27.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_12</name><pose>  3.0 27.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_22</name><pose> 18.0 27.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_32</name><pose> 33.0 27.0 0 0 0 0</pose></include>
+
+    <!-- Trees: Irregular orchard grid (random offsets ~0.5m) -->
+    <!-- Row 0 (nominal y = 7) -->
+    <include><uri>model://pine_tree</uri><name>tree_r0_c00</name><pose>-8  7.4 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c01</name><pose>-6  6.6 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c02</name><pose>-4  7.2 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c03</name><pose>-2  6.7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c04</name><pose>0   7.3 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c05</name><pose>2   6.5 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c06</name><pose>4   7.1 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c07</name><pose>6   6.8 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c08</name><pose>8   7.4 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c09</name><pose>10  6.5 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c10</name><pose>12  7.2 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c11</name><pose>14  6.7 0 0 0 0</pose></include>
+
+    <!-- Row 0 Extension (10 trees) -->
+    <include><uri>model://pine_tree</uri><name>tree_r0_c12</name><pose>16  7.2 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c13</name><pose>18  6.8 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c14</name><pose>20  7.3 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c15</name><pose>22  6.9 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c16</name><pose>24  7.1 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c17</name><pose>26  7.4 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c18</name><pose>28  6.6 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c19</name><pose>30  7.0 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c20</name><pose>32  7.3 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c21</name><pose>34  6.7 0 0 0 0</pose></include>
+
+    <!-- Row 1 (nominal y = 17) -->
+    <include><uri>model://pine_tree</uri><name>tree_r1_c00</name><pose>-8  16.5 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c01</name><pose>-6  17.3 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c02</name><pose>-4  16.7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c03</name><pose>-2  17.4 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c04</name><pose>0   16.6 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c05</name><pose>2   17.2 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c06</name><pose>4   16.5 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c07</name><pose>6   17.3 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c08</name><pose>8   16.8 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c09</name><pose>10  17.4 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c10</name><pose>12  16.6 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c11</name><pose>14  17.1 0 0 0 0</pose></include>
+
+    <!-- Row 1 Extension (10 trees) -->
+    <include><uri>model://pine_tree</uri><name>tree_r1_c12</name><pose>16  16.8 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c13</name><pose>18  17.2 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c14</name><pose>20  16.7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c15</name><pose>22  17.3 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c16</name><pose>24  16.9 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c17</name><pose>26  17.4 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c18</name><pose>28  16.6 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c19</name><pose>30  17.0 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c20</name><pose>32  17.3 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c21</name><pose>34  16.7 0 0 0 0</pose></include>
+  </world>
+</sdf>

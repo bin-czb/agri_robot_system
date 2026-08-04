@@ -1,0 +1,176 @@
+<sdf version='1.9'>
+  <model name='harvester'>
+    <link name='body'>
+      <inertial>
+        <pose>0.001461859943539983 3.394155848819322e-07 0.02545018998691382 0 0 0</pose>
+        <mass>71.569783728148607</mass>
+        <inertia>
+          <ixx>5.5099690132761534</ixx>
+          <ixy>-2.8203822394661012e-05</ixy>
+          <ixz>-0.037408648872619223</ixz>
+          <iyy>13.372254646463929</iyy>
+          <iyz>-8.6855642298443403e-06</iyz>
+          <izz>18.82938640676279</izz>
+        </inertia>
+      </inertial>
+      <collision name='body_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>meshes/body.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='body_fixed_joint_lump__camera_body_collision_1'>
+        <pose>1.1775 0.00026991 0.383 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>meshes/camera_body.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='body_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>meshes/body.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <ambient>1 1 1 1</ambient>
+        </material>
+      </visual>
+      <visual name='body_fixed_joint_lump__camera_body_visual_1'>
+        <pose>1.1775 0.00026991 0.383 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>meshes/camera_body.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <ambient>1 1 1 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='wheel1_joint' type='revolute'>
+      <pose relative_to='body'>0.9419999999999999 -0.61448 0.023 0 0 0</pose>
+      <parent>body</parent>
+      <child>wheel1_body</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <effort>50</effort>
+          <velocity>50</velocity>
+          <lower>-10000000000000000</lower>
+          <upper>10000000000000000</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='wheel1_body'>
+      <pose relative_to='wheel1_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>5.10702591327572e-15 0.0516193137078337 -2.09155609498524e-14 0 0 0</pose>
+        <mass>1.28953895260844</mass>
+        <inertia>
+          <ixx>0.00256684437461673</ixx>
+          <ixy>-5.1376545636708799e-17</ixy>
+          <ixz>-3.5266446201321099e-06</ixz>
+          <iyy>0.0024681788716998201</iyy>
+          <iyz>1.9259978327601199e-16</iyz>
+          <izz>0.0025580211279431901</izz>
+        </inertia>
+      </inertial>
+      <collision name='wheel1_body_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>meshes/wheel1_body.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='wheel1_body_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>meshes/wheel1_body.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <ambient>1 1 1 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='wheel2_joint' type='revolute'>
+      <pose relative_to='body'>0.9419999999999999 0.61468 0.023 0 0 0</pose>
+      <parent>body</parent>
+      <child>wheel2_body</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <effort>50</effort>
+          <velocity>50</velocity>
+          <lower>-10000000000000000</lower>
+          <upper>10000000000000000</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='wheel2_body'>
+      <pose relative_to='wheel2_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>1.7874590696465e-14 -0.0516193137078337 -1.20112253476634e-14 0 0 0</pose>
+        <mass>1.28953895260844</mass>
+        <inertia>
+          <ixx>0.0025567855481574298</ixx>
+          <ixy>1.63833113620075e-16</ixy>
+          <ixz>9.3486015558606194e-08</ixz>
+          <iyy>0.0024681788716998201</iyy>
+          <iyz>-1.13690895355625e-16</iyz>
+          <izz>0.0025680799544024898</izz>
+        </inertia>
+      </inertial>
+      <collision name='wheel2_body_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>meshes/wheel2_body.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='wheel2_body_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>meshes/wheel2_body.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <ambient>1 1 1 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <frame name='camera_joint' attached_to='body'>
+      <pose>1.1775 0.00027 0.383 0 -0 0</pose>
+    </frame>
+    <frame name='camera_body' attached_to='camera_joint'/>
+  </model>
+</sdf>

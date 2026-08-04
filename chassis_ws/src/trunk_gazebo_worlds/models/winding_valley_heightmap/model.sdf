@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+    <model name="heightmap">
+        <static>true</static>
+        <link name="link">
+            <collision name="collision">
+                <geometry>
+                    <heightmap>
+                        <!-- Use a model-local URI so this model doesn't depend on system "media/" resources -->
+                        <uri>materials/textures/heightmap.png</uri>
+                        <size>1000 1000 25</size>
+                        <pos>0 0 -4.0</pos>
+                    </heightmap>
+                </geometry>
+            </collision>
+            <visual name="visual">
+                <geometry>
+                    <heightmap>
+                        <!-- IMPORTANT:
+                             The original Fuel model references textures like
+                             file://media/materials/textures/grass_diffusespecular.png
+                             which may not exist / be discoverable on all Gazebo Sim installs.
+                             Those missing resources can trigger OGRE shader compilation failures.
+
+                             We intentionally keep the heightmap geometry but remove the external
+                             texture-blending to make rendering robust across machines. -->
+                        <uri>materials/textures/heightmap.png</uri>
+                        <size>1000 1000 25</size>
+                        <pos>0 0 -4.0</pos>
+                    </heightmap>
+                </geometry>
+                <material>
+                    <ambient>0.25 0.35 0.25 1</ambient>
+                    <diffuse>0.25 0.45 0.25 1</diffuse>
+                    <specular>0.01 0.01 0.01 1</specular>
+                </material>
+            </visual>
+        </link>
+    </model>
+</sdf>

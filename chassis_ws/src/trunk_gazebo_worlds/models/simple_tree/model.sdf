@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <model name="simple_tree">
+    <static>true</static>
+    <link name="link">
+      <!-- Trunk -->
+      <pose>0 0 0.8 0 0 0</pose>
+      <collision name="trunk_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.18</radius>
+            <length>1.6</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="trunk_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.18</radius>
+            <length>1.6</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.35 0.22 0.12 1</ambient>
+          <diffuse>0.45 0.28 0.14 1</diffuse>
+          <specular>0.05 0.05 0.05 1</specular>
+        </material>
+      </visual>
+
+      <!-- Foliage canopy (simple ellipsoid using scaled sphere) -->
+      <collision name="canopy_collision">
+        <pose>0 0 1.8 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.85</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name="canopy_visual">
+        <pose>0 0 1.8 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.85</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>0.12 0.25 0.12 1</ambient>
+          <diffuse>0.10 0.45 0.12 1</diffuse>
+          <specular>0.02 0.02 0.02 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
+
+
+
+

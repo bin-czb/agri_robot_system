@@ -1,0 +1,2 @@
+# Trunk detection package
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="fuel_hilly_orchard_world">
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.85 0.9 1 1</background>
+    </scene>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.2 0.2 -1</direction>
+    </light>
+
+    <!-- Realistic open-source terrain (downloaded from Fuel and installed locally) -->
+    <!-- Source: https://fuel.gazebosim.org/1.0/OpenRobotics/models/Winding%20Valley%20Heightmap -->
+    <include>
+      <name>terrain</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://winding_valley_heightmap</uri>
+    </include>
+
+    <!-- Realistic open-source trees (downloaded from Fuel and installed locally) -->
+    <!-- Source: https://fuel.gazebosim.org/1.0/OpenRobotics/models/Pine%20Tree -->
+
+    <!-- Row 1 (y = -6) -->
+    <include><name>pine_r1_00</name><pose>-33 -6 0 0 0 0.10</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_01</name><pose>-27 -6 0 0 0 0.25</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_02</name><pose>-21 -6 0 0 0 0.05</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_03</name><pose>-15 -6 0 0 0 0.20</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_04</name><pose>-9  -6 0 0 0 0.15</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_05</name><pose>-3  -6 0 0 0 0.30</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_06</name><pose>3   -6 0 0 0 0.00</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_07</name><pose>9   -6 0 0 0 0.22</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_08</name><pose>15  -6 0 0 0 0.12</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_09</name><pose>21  -6 0 0 0 0.28</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_10</name><pose>27  -6 0 0 0 0.08</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r1_11</name><pose>33  -6 0 0 0 0.18</pose><uri>model://pine_tree</uri></include>
+
+    <!-- Row 2 (y = +6) -->
+    <include><name>pine_r2_00</name><pose>-33 6 0 0 0 0.12</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_01</name><pose>-27 6 0 0 0 0.06</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_02</name><pose>-21 6 0 0 0 0.26</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_03</name><pose>-15 6 0 0 0 0.14</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_04</name><pose>-9  6 0 0 0 0.30</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_05</name><pose>-3  6 0 0 0 0.02</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_06</name><pose>3   6 0 0 0 0.20</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_07</name><pose>9   6 0 0 0 0.10</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_08</name><pose>15  6 0 0 0 0.28</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_09</name><pose>21  6 0 0 0 0.04</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_10</name><pose>27  6 0 0 0 0.16</pose><uri>model://pine_tree</uri></include>
+    <include><name>pine_r2_11</name><pose>33  6 0 0 0 0.24</pose><uri>model://pine_tree</uri></include>
+  </world>
+</sdf>
+
+

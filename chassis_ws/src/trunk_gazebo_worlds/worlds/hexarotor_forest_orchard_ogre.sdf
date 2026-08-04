@@ -1,0 +1,115 @@
+<sdf version='1.9'>
+  <!--
+    OGRE1 (ogre) render-engine variant of hexarotor_forest_orchard.sdf.
+
+    Why this file exists:
+    - Some GPUs / drivers flicker, flash, or crash with OGRE2 (ogre2).
+    - Gazebo's Sensors system also needs a render engine; matching it to the GUI
+      engine helps stability.
+
+    Use it via:
+      ros2 launch trunk_gazebo_worlds orchard_ign.launch.py \
+        world:=hexarotor_forest_orchard_ogre.sdf render_engine_gui:=ogre gui_config:=simple_gui.config
+  -->
+  <world name='hexarotor_forest_orchard_world'>
+    <physics name='4ms' type='ignored'>
+      <max_step_size>0.0040000000000000001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <plugin name='ignition::gazebo::systems::Physics' filename='ignition-gazebo-physics-system'/>
+    <plugin name='ignition::gazebo::systems::Sensors' filename='ignition-gazebo-sensors-system'>
+      <render_engine>ogre</render_engine>
+    </plugin>
+    <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='ignition-gazebo-scene-broadcaster-system'/>
+    <plugin name='ignition::gazebo::systems::UserCommands' filename='ignition-gazebo-user-commands-system'/>
+
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>38.775593600000001</latitude_deg>
+      <longitude_deg>-9.1375554000000001</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.8 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <!-- Sun -->
+    <light name='sun' type='directional'>
+      <pose>0 0 10 0 -0 0</pose>
+      <cast_shadows>true</cast_shadows>
+      <intensity>1</intensity>
+      <direction>-0.5 0.1 -0.9</direction>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <linear>0.01</linear>
+        <constant>0.90000000000000002</constant>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+    </light>
+
+    <!-- Robot: bb_robot (tracked/skid-steer) -->
+    <include>
+      <uri>model://bb_robot</uri>
+      <name>bb_robot</name>
+      <pose>-12 12 0.5 0 0 0</pose>
+    </include>
+
+    <!-- Ground: grass patch tiles (15m x 15m each) -->
+    <include><uri>model://grasspatch</uri><name>grass_00</name><pose>-12.0 -3.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_10</name><pose>  3.0 -3.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_20</name><pose> 18.0 -3.0 0 0 0 0</pose></include>
+
+    <include><uri>model://grasspatch</uri><name>grass_01</name><pose>-12.0 12.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_11</name><pose>  3.0 12.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_21</name><pose> 18.0 12.0 0 0 0 0</pose></include>
+
+    <include><uri>model://grasspatch</uri><name>grass_02</name><pose>-12.0 27.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_12</name><pose>  3.0 27.0 0 0 0 0</pose></include>
+    <include><uri>model://grasspatch</uri><name>grass_22</name><pose> 18.0 27.0 0 0 0 0</pose></include>
+
+    <!-- Trees: neat orchard grid -->
+    <!-- Row 0 (y = 7) -->
+    <include><uri>model://pine_tree</uri><name>tree_r0_c00</name><pose>-8  7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c01</name><pose>-6  7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c02</name><pose>-4  7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c03</name><pose>-2  7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c04</name><pose>0   7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c05</name><pose>2   7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c06</name><pose>4   7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c07</name><pose>6   7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c08</name><pose>8   7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c09</name><pose>10  7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c10</name><pose>12  7 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r0_c11</name><pose>14  7 0 0 0 0</pose></include>
+
+    <!-- Row 1 (y = 17) -->
+    <include><uri>model://pine_tree</uri><name>tree_r1_c00</name><pose>-8  17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c01</name><pose>-6  17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c02</name><pose>-4  17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c03</name><pose>-2  17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c04</name><pose>0   17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c05</name><pose>2   17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c06</name><pose>4   17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c07</name><pose>6   17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c08</name><pose>8   17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c09</name><pose>10  17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c10</name><pose>12  17 0 0 0 0</pose></include>
+    <include><uri>model://pine_tree</uri><name>tree_r1_c11</name><pose>14  17 0 0 0 0</pose></include>
+  </world>
+</sdf>
+
+
+
+

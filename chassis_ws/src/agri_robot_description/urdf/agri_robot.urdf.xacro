@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<robot name="agri_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="use_meshes" default="true"/>
+
+  <xacro:property name="mesh_path" value="package://trunk_gazebo_worlds/models/bb_robot/meshes"/>
+  <xacro:property name="base_length" value="2.50"/>
+  <xacro:property name="base_width" value="1.40"/>
+  <xacro:property name="base_height" value="0.40"/>
+  <xacro:property name="track_radius" value="0.20"/>
+  <xacro:property name="track_width" value="0.20"/>
+
+  <material name="body_silver">
+    <color rgba="0.75 0.75 0.75 1.0"/>
+  </material>
+  <material name="track_black">
+    <color rgba="0.02 0.02 0.02 1.0"/>
+  </material>
+  <material name="sensor_white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <xacro:if value="$(arg use_meshes)">
+          <mesh filename="${mesh_path}/body.STL"/>
+        </xacro:if>
+        <xacro:unless value="$(arg use_meshes)">
+          <box size="${base_length} ${base_width} ${base_height}"/>
+        </xacro:unless>
+      </geometry>
+      <material name="body_silver"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.30" rpy="0 0 0"/>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="left_track">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5.0"/>
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <xacro:if value="$(arg use_meshes)">
+          <mesh filename="${mesh_path}/wheel2_body.STL"/>
+        </xacro:if>
+        <xacro:unless value="$(arg use_meshes)">
+          <cylinder radius="${track_radius}" length="${track_width}"/>
+        </xacro:unless>
+      </geometry>
+      <material name="track_black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="${track_radius}" length="${track_width}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="left_motor_joint" type="continuous">
+    <origin xyz="0.942 0.61468 0.023" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="left_track"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="right_track">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5.0"/>
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <xacro:if value="$(arg use_meshes)">
+          <mesh filename="${mesh_path}/wheel1_body.STL"/>
+        </xacro:if>
+        <xacro:unless value="$(arg use_meshes)">
+          <cylinder radius="${track_radius}" length="${track_width}"/>
+        </xacro:unless>
+      </geometry>
+      <material name="track_black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="${track_radius}" length="${track_width}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="right_motor_joint" type="continuous">
+    <origin xyz="0.942 -0.61448 0.023" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="right_track"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="caster_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <sphere radius="0.15"/>
+      </geometry>
+      <material name="track_black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.15"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="caster_joint" type="fixed">
+    <origin xyz="-1.0 0 -0.15" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="caster_wheel"/>
+  </joint>
+
+  <link name="camera_link">
+    <inertial>
+      <origin xyz="-0.015 0 0" rpy="0 0 0"/>
+      <mass value="0.09"/>
+      <inertia ixx="0.00008175" ixy="0.0" ixz="0.0" iyy="0.0000135" iyz="0.0" izz="0.00008175"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <xacro:if value="$(arg use_meshes)">
+          <mesh filename="${mesh_path}/camera_body.STL"/>
+        </xacro:if>
+        <xacro:unless value="$(arg use_meshes)">
+          <box size="0.08 0.08 0.05"/>
+        </xacro:unless>
+      </geometry>
+      <material name="sensor_white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.08 0.08 0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <origin xyz="1.1775 0.00027 0.383" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+  </joint>
+
+  <link name="camera_optical_frame"/>
+  <joint name="camera_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
+    <parent link="camera_link"/>
+    <child link="camera_optical_frame"/>
+  </joint>
+
+  <link name="imu_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.02"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="0.06 0.04 0.02"/>
+      </geometry>
+      <material name="sensor_white"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.06 0.04 0.02"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0 0 0.45" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+  </joint>
+</robot>

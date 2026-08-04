@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>agri_aoa_driver</name>
+  <version>0.1.0</version>
+  <description>AOA serial frontend and UAV MAVLink position source for ROS 2.</description>
+  <maintainer email="czb@todo.todo">czb</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>rclpy</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>trunk_interfaces</depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-pymavlink</exec_depend>
+  <exec_depend>python3-pyqt5</exec_depend>
+  <exec_depend>python3-pyqtgraph</exec_depend>
+  <exec_depend>python3-scipy</exec_depend>
+  <exec_depend>python3-serial</exec_depend>
+  <exec_depend>python3-utm</exec_depend>
+
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

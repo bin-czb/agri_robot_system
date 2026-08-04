@@ -1,0 +1,199 @@
+<sdf version='1.9'>
+  <model name='aa_robot'>
+    <link name='body'>
+      <inertial>
+        <pose>-0.0136927037464847 0.125001806294515 0.490136098723067 0 0 0</pose>
+        <mass>272.83445392211</mass>
+        <inertia>
+          <ixx>24.8518135784829</ixx>
+          <ixy>-8.90645989037983E-05</ixy>
+          <ixz>0.000317718881170881</ixz>
+          <iyy>29.1578048281964</iyy>
+          <iyz>0.176614063947515</iyz>
+          <izz>53.627531224839</izz>
+        </inertia>
+      </inertial>
+      <visual name='body_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://aa_robot/meshes/body.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.75 0.75 0.75 1</diffuse>
+          <ambient>0.75 0.75 0.75 1</ambient>
+        </material>
+      </visual>
+      <collision name='body_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://aa_robot/meshes/body.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name='camera_body'>
+      <pose relative_to='body'>1.1775 0.0002699 0.383 0 0 0</pose>
+      <inertial>
+        <pose>-0.015 0 0 0 0 0</pose>
+        <mass>0.09</mass>
+        <inertia>
+          <ixx>8.175E-05</ixx>
+          <ixy>-1.719E-20</ixy>
+          <ixz>4.659E-21</ixz>
+          <iyy>1.35E-05</iyy>
+          <iyz>2.354E-19</iyz>
+          <izz>8.175E-05</izz>
+        </inertia>
+      </inertial>
+      <visual name='camera_body_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://aa_robot/meshes/camera_body.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <ambient>1 1 1 1</ambient>
+        </material>
+      </visual>
+      <collision name='camera_body_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://aa_robot/meshes/camera_body.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name='camera_joint' type='fixed'>
+      <parent>body</parent>
+      <child>camera_body</child>
+    </joint>
+
+    <link name='wheel1_body'>
+      <pose relative_to='body'>0.942 -0.61448 0.023 0 0 0</pose>
+      <inertial>
+        <pose>0 0.05307 0 0 0 0</pose>
+        <mass>1.5696</mass>
+        <inertia>
+          <ixx>0.003457</ixx>
+          <ixy>-5.49E-17</ixy>
+          <ixz>-3.53E-06</ixz>
+          <iyy>0.004231</iyy>
+          <iyz>1.93E-16</iyz>
+          <izz>0.003449</izz>
+        </inertia>
+      </inertial>
+      <visual name='wheel1_body_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://aa_robot/meshes/wheel1_body.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+          <ambient>0.2 0.2 0.2 1</ambient>
+        </material>
+      </visual>
+      <collision name='wheel1_body_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://aa_robot/meshes/wheel1_body.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name='wheel1_joint' type='revolute'>
+      <parent>body</parent>
+      <child>wheel1_body</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+          <effort>100</effort>
+          <velocity>10</velocity>
+        </limit>
+      </axis>
+    </joint>
+
+    <link name='wheel2_body'>
+      <pose relative_to='body'>0.942 0.61468 0.023 0 0 0</pose>
+      <inertial>
+        <pose>0 -0.05307 0 0 0 0</pose>
+        <mass>1.5696</mass>
+        <inertia>
+          <ixx>0.003447</ixx>
+          <ixy>1.67E-16</ixy>
+          <ixz>9.35E-08</ixz>
+          <iyy>0.004231</iyy>
+          <iyz>-1.15E-16</iyz>
+          <izz>0.003459</izz>
+        </inertia>
+      </inertial>
+      <visual name='wheel2_body_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://aa_robot/meshes/wheel2_body.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+          <ambient>0.2 0.2 0.2 1</ambient>
+        </material>
+      </visual>
+      <collision name='wheel2_body_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://aa_robot/meshes/wheel2_body.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name='wheel2_joint' type='revolute'>
+      <parent>body</parent>
+      <child>wheel2_body</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+          <effort>100</effort>
+          <velocity>10</velocity>
+        </limit>
+      </axis>
+    </joint>
+
+    <plugin
+      filename="ignition-gazebo-diff-drive-system"
+      name="ignition::gazebo::systems::DiffDrive">
+      <left_joint>wheel2_joint</left_joint>
+      <right_joint>wheel1_joint</right_joint>
+      <wheel_separation>1.23</wheel_separation>
+      <wheel_radius>0.2</wheel_radius>
+      <odom_publish_frequency>20</odom_publish_frequency>
+      <topic>cmd_vel</topic>
+    </plugin>
+  </model>
+</sdf>
+

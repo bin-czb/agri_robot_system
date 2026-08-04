@@ -1,0 +1,33 @@
+# 导航控制参数配置
+navigation_controller:
+  ros__parameters:
+    # 运动控制参数
+    max_linear_velocity: 0.5      # 最大线速度 m/s
+    max_angular_velocity: 1.0     # 最大角速度 rad/s (已统一为1.0)  
+    min_linear_velocity: 0.1      # 最小线速度 m/s
+    target_distance: 2.0          # 目标跟踪距离 m
+    min_distance: 0.3             # 最小安全距离 m
+    arrival_threshold: 0.5        # 到达判断阈值 m
+    
+    # 控制增益参数
+    distance_scale_factor: 0.1    # 距离缩放因子
+    angle_proportional_gain: 1.0  # 角度比例增益
+    max_steering_angle: 0.785     # 最大转向角度 (45度)
+
+    # 图像/相机参数（用于基于像素偏移的转向补偿）
+    image_width: 640
+    image_height: 480
+    camera_horizontal_fov_rad: 1.047
+    use_pixel_offset_steering: true
+    pixel_offset_gain: 1.0
+    
+    # 安全和超时参数
+    timeout_threshold: 2.0        # 检测超时时间 s
+    emergency_stop_enabled: true  # 紧急停止使能
+    
+    # ROS话题配置
+    line_topic: "/trunk_detection/trunk_line"
+    control_topic: "/chassis_control/cmd"
+    status_topic: "/navigation/status"
+    twist_topic: "/cmd_vel"
+

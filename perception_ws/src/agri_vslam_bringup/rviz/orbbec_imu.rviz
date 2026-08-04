@@ -1,0 +1,97 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.45
+      Cell Size: 0.5
+      Class: rviz_default_plugins/Grid
+      Color: 110; 110; 110
+      Enabled: true
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Name: IMU Reference Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 8
+      Reference Frame: imu_world
+      Value: true
+    - Alpha: 1
+      Axes Length: 0.9
+      Axes Radius: 0.045
+      Class: rviz_default_plugins/Pose
+      Enabled: true
+      Name: Filtered IMU Orientation
+      Shape: Axes
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /camera/imu/pose
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Acceleration and Angular Velocity
+      Namespaces:
+        angular_velocity: true
+        imu_values: true
+        linear_acceleration: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /camera/imu/markers
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Scale: 0.35
+      Name: IMU Frames
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree: {}
+      Update Interval: 0
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 30; 33; 36
+    Fixed Frame: imu_world
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 3.0
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0.45
+      Name: Orbit
+      Near Clip Distance: 0.01
+      Pitch: 0.45
+      Target Frame: imu_world
+      Yaw: 0.7
+Window Geometry:
+  Height: 820
+  Width: 1180
+  X: 120
+  Y: 80

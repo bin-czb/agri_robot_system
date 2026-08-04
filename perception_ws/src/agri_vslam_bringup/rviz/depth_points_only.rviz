@@ -1,0 +1,52 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/PointCloud2
+      Enabled: true
+      Name: Raw Depth PointCloud
+      Topic:
+        Value: /camera/depth_registered/points
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Depth: 1
+      Style: Points
+      Size (Pixels): 1
+      Color Transformer: FlatColor
+      Color: 160; 220; 255
+      Alpha: 1
+      Decay Time: 0
+      Queue Size: 1
+  Enabled: true
+  Global Options:
+    Fixed Frame: camera_color_optical_frame
+    Frame Rate: 15
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 2
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 1
+      Name: Orbit
+      Pitch: 0.2
+      Target Frame: camera_color_optical_frame
+      Yaw: 0
+Window Geometry:
+  Height: 820
+  Width: 1200
+  X: 120
+  Y: 80

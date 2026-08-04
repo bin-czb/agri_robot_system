@@ -1,0 +1,79 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Enabled: true
+      Name: Grid
+      Plane: XY
+      Reference Frame: map
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Name: TF
+      Show Axes: true
+      Show Names: false
+    - Class: rviz_default_plugins/Odometry
+      Enabled: true
+      Name: RTAB-Map Odometry
+      Topic:
+        Value: /rtabmap/odom
+      Shape: Arrow
+      Position Tolerance: 0.1
+      Angle Tolerance: 0.1
+      Keep: 200
+    - Class: rviz_default_plugins/PointCloud2
+      Enabled: false
+      Name: Depth Geometry PointCloud
+      Topic:
+        Value: /camera/depth_registered/points
+      Style: Points
+      Size (Pixels): 1
+      Color Transformer: FlatColor
+      Color: 180; 220; 255
+      Alpha: 1
+      Decay Time: 0
+    - Class: rviz_default_plugins/Image
+      Enabled: false
+      Name: Color Image
+      Topic:
+        Value: /camera/color/image_raw
+      Normalize Range: true
+    - Class: rviz_default_plugins/LaserScan
+      Enabled: false
+      Name: Fake Scan
+      Topic:
+        Value: /scan
+      Style: Points
+      Size (Pixels): 3
+  Enabled: true
+  Global Options:
+    Fixed Frame: bb_robot/odom
+    Frame Rate: 15
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 8
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+      Name: Orbit
+      Pitch: 0.785
+      Target Frame: bb_robot/base_link
+      Yaw: 0.785
+Window Geometry:
+  Height: 900
+  Width: 1400
+  X: 80
+  Y: 60

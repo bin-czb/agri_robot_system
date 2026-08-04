@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <model name="hilly_terrain">
+    <static>true</static>
+    <link name="link">
+      <!-- Shift terrain down so hills are centered roughly around z=0 -->
+      <collision name="collision">
+        <pose>0 0 -1.0 0 0 0</pose>
+        <geometry>
+          <heightmap>
+            <uri>model://hilly_terrain/materials/textures/hills.pgm</uri>
+            <size>120 120 2.0</size>
+            <pos>0 0 0</pos>
+          </heightmap>
+        </geometry>
+      </collision>
+
+      <visual name="visual">
+        <pose>0 0 -1.0 0 0 0</pose>
+        <geometry>
+          <heightmap>
+            <uri>model://hilly_terrain/materials/textures/hills.pgm</uri>
+            <size>120 120 2.0</size>
+            <pos>0 0 0</pos>
+          </heightmap>
+        </geometry>
+        <material>
+          <ambient>0.20 0.35 0.20 1</ambient>
+          <diffuse>0.20 0.45 0.20 1</diffuse>
+          <specular>0.01 0.01 0.01 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
+
+
+
+

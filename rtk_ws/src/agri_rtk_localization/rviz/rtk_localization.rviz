@@ -1,0 +1,125 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: 显示
+  - Class: rviz_common/Views
+    Name: 视图
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.55
+      Cell Size: 1
+      Class: rviz_default_plugins/Grid
+      Color: 125; 125; 125
+      Enabled: true
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Name: ENU参考网格
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 30
+      Reference Frame: local_origin
+      Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/PoseWithCovariance
+      Color: 45; 220; 90
+      Enabled: true
+      Name: RTK当前位置与协方差
+      Shape:
+        Alpha: 1
+        Axes Length: 0.8
+        Axes Radius: 0.05
+        Color: 45; 220; 90
+        Head Length: 0.25
+        Head Radius: 0.10
+        Shaft Length: 0.75
+        Shaft Radius: 0.04
+        Value: Arrow
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /global_pose/rtk
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz_default_plugins/Path
+      Color: 30; 170; 255
+      Enabled: true
+      Head Diameter: 0.2
+      Head Length: 0.15
+      Length: 0.3
+      Line Style: Lines
+      Line Width: 0.06
+      Name: RTK移动轨迹
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0.02
+      Pose Color: 255; 255; 255
+      Pose Style: None
+      Radius: 0.03
+      Shaft Diameter: 0.08
+      Shaft Length: 0.25
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /rtk/path
+      Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: RTK定位点
+      Namespaces:
+        rtk: true
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /rtk/marker
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Enabled: false
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Scale: 0.35
+      Name: TF诊断
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree: {}
+      Update Interval: 0
+      Value: false
+  Enabled: true
+  Global Options:
+    Background Color: 28; 31; 34
+    Fixed Frame: local_origin
+    Frame Rate: 20
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Angle: 0
+      Name: 俯视
+      Scale: 25
+      Target Frame: local_origin
+      X: 0
+      Y: 0
+Window Geometry:
+  Height: 900
+  Width: 1400
+  X: 80
+  Y: 60

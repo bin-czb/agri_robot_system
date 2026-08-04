@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -Eeo pipefail
+
+CREDENTIAL_FILE="${AGRI_NTRIP_CREDENTIAL_FILE:-${XDG_CONFIG_HOME:-${HOME}/.config}/agri_rtk/ntrip.env}"
+
+if [[ ! -f "${CREDENTIAL_FILE}" ]]; then
+  echo "错误: 找不到 NTRIP 凭据文件: ${CREDENTIAL_FILE}" >&2
+  echo "请先运行: ros2 run agri_rtk_localization configure_ntrip_credentials" >&2
+  exit 1
+fi
+
+permissions="$(stat -c '%a' "${CREDENTIAL_FILE}")"
+if [[ "${permissions}" != "600" && "${permissions}" != "400" ]]; then
+  echo "错误: 凭据文件权限必须是 600 或 400，当前为 ${permissions}。" >&2
+  echo "修复命令: chmod 600 ${CREDENTIAL_FILE}" >&2
+  exit 1
+fi
+
+set -a
+# 本文件由 configure_ntrip_credentials 创建，只允许当前用户读取。
+source "${CREDENTIAL_FILE}"
+set +a
+
+if [[ -z "${NTRIP_USERNAME:-}" || -z "${NTRIP_PASSWORD:-}" ]]; then
+  echo "错误: 凭据文件缺少 NTRIP_USERNAME 或 NTRIP_PASSWORD。" >&2
+  exit 1
+fi
+
+echo "正在启动 UM982/NTRIP，账号已加载，密码不会显示。"
+exec ros2 launch agri_rtk_localization rtk_system.launch.py

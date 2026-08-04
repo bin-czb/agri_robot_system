@@ -1,0 +1,31 @@
+aoa_global_pose_filter:
+  ros__parameters:
+    input_topic: /global_pose/aoa_raw_map
+    output_topic: /global_pose/aoa
+    selected_topic: /global_pose/selected
+    status_topic: /global_pose/aoa/status
+    expected_frame: map
+    publish_selected: true
+
+    # AOA-only mode: suppress coordinate jumps and smooth normal jitter.
+    position_alpha: 0.25
+    yaw_alpha: 0.20
+    # 2026-04 rosbag: old mirror jumps reached 11-20 m; the latest bag still
+    # contained 0.86-1.17 m UAV-source jumps. Keep ordinary corrections below
+    # 0.75 m and require an explicit relocalization for larger offsets.
+    max_jump_m: 0.75
+    max_speed_mps: 2.0
+    jump_slack_m: 0.20
+    gate_dt_max_s: 2.0
+    innovation_sigma_limit: 3.5
+    initialization_samples: 5
+    candidate_cluster_radius_m: 0.50
+    min_xy_variance: 0.04
+    min_yaw_variance: 0.0076154355
+    degraded_after_s: 1.0
+    lost_after_s: 3.0
+
+    # Set true after /odometry/filtered is available. Odometry predicts
+    # high-rate motion while AOA supplies low-rate global correction.
+    use_odometry: false
+    odometry_topic: /odometry/filtered

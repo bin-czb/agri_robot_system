@@ -1,0 +1,24 @@
+# 树干检测参数配置
+trunk_detector:
+  ros__parameters:
+    # YOLO模型设置
+    model_path: "best.pt"                    # YOLO模型文件路径
+    confidence_threshold: 0.5                # 置信度阈值
+    max_detections: 10                       # 最大检测数量
+    
+    # ROS话题设置
+    image_topic: "/camera/color/image_raw"   # 输入图像话题
+    detection_topic: "/trunk_detection/detections"  # 检测结果话题
+
+line_fitter:
+  ros__parameters:
+    # 直线拟合参数
+    min_points_for_fitting: 2               # 拟合所需最少点数
+    max_fitting_error: 50.0                 # 最大允许拟合误差
+    use_nearest_points_only: true           # 是否只使用最近的点
+    max_points_for_fitting: 3               # 拟合使用的最大点数
+    
+    # ROS话题设置  
+    detection_topic: "/trunk_detection/detections"  # 输入检测话题
+    line_topic: "/trunk_detection/trunk_line"       # 输出直线话题
+

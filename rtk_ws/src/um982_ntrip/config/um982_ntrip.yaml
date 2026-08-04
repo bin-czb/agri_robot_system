@@ -1,0 +1,31 @@
+um982_ntrip:
+  ros__parameters:
+    serial_port: /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0
+    baudrate: 115200
+    configure_gga: true
+    gga_command: GPGGA 1
+    # UM982 默认偏向 UAV 动态模型；地面低动态精准农业使用 SURVEY。
+    receiver_mode_command: MODE ROVER SURVEY
+    # UM982 默认 PVTALG 为 SINGLE；RTK 地面定位使用双频 MULTI 解算。
+    receiver_pvt_command: CONFIG PVTALG MULTI
+    # 避免接收机在差分中断后长时间保留陈旧的 RTK 状态。
+    receiver_rtk_timeout_sec: 60
+    query_receiver_info: true
+    frame_id: gps_link
+
+    ntrip_host: 103.143.19.54
+    ntrip_port: 8002
+    ntrip_mountpoint: RTCM33GRCEJpro
+    # Credentials intentionally stay out of source control. Set the
+    # NTRIP_USERNAME and NTRIP_PASSWORD environment variables before launch.
+    ntrip_username: ''
+    ntrip_password: ''
+    send_gga_interval_sec: 1.0
+    reconnect_delay_sec: 5.0
+    # Reconnect when TCP remains open but no RTCM payload arrives.
+    rtcm_stall_timeout_sec: 10.0
+    rtcm_status_interval_sec: 5.0
+
+    # GNGGA indicates a multi-constellation solution. This bit mask is GPS=1,
+    # GLONASS=2, Galileo=4, BeiDou=8 (sensor_msgs/NavSatStatus constants).
+    service_mask: 15

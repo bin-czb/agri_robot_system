@@ -1,0 +1,24 @@
+uav_gps_node:
+  ros__parameters:
+    port: /dev/ttyUSB0
+    baud: 57600
+    publish_rtk_altitude: true
+    rtk_min_fix_type: 6
+
+aoa_localization_node:
+  ros__parameters:
+    serial_port: /dev/ttyACM0
+    baud: 115200
+    output_frame: enu
+    base_heading_mode: imu_relative
+    base_initial_heading_enu_deg: 0.0
+    base_imu_topic: /camera/imu/data
+    base_odometry_topic: /odometry/filtered
+    aoa_mount_yaw_offset_deg: 0.0
+    aoa_azimuth_sign: 1
+    aoa_range_bias_m: 0.0
+    aoa_range_scale: 1.0
+    aoa_range_alpha: 0.3
+    aoa_angle_alpha: 0.3
+    aoa_opt_enable: false
+    allow_gate_force_reseed: false

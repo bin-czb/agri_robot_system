@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>trunk_gazebo_worlds</name>
+  <version>0.0.1</version>
+  <description>Gazebo Sim (Ignition) worlds/models for trunk tracking simulation.</description>
+  <maintainer email="czb@todo.todo">czb</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- For ros2 launch and ament index access -->
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+
+

@@ -1,0 +1,184 @@
+schema_version: 1
+created_utc: '2026-07-19T08:15:40+00:00'
+imu:
+  gravity_mps2: 9.80665
+  accelerometer_bias_mps2:
+  - -0.04242376887108712
+  - 0.015526119277655681
+  - 0.26231849962029585
+  accelerometer_gain:
+  - 1.0023557224493418
+  - 1.0023706039319362
+  - 1.0032833981656695
+  gyroscope_bias_rad_s:
+  - -0.003032946480269849
+  - -0.01450382496743757
+  - 0.013763676112125312
+  accelerometer_noise_variance:
+  - 0.001068628638152218
+  - 0.0014834420568592959
+  - 0.0022269408216692935
+  gyroscope_noise_variance:
+  - 3.8189807977282326e-05
+  - 2.4626189825438725e-05
+  - 2.9877112195860044e-06
+  corrected_gravity_norm_by_pose_mps2:
+    +y: 9.80919283812705
+    -y: 9.808620524307576
+    -x: 9.80857736958462
+    +x: 9.808307559378022
+    -z: 9.80812584477049
+    +z: 9.815216975618679
+  model: axis_aligned_six_position
+  warning: This estimates bias and diagonal gain only. The Orbbec factory camera-IMU
+    extrinsic and timestamp calibration remain authoritative.
+  captured_utc: '2026-07-19T08:32:28+00:00'
+  topic: /camera/gyro_accel/sample
+  frame_id: camera_accel_gyro_optical_frame
+  samples_per_pose:
+    +y: 1209
+    -y: 1210
+    -x: 1210
+    +x: 1210
+    -z: 1210
+    +z: 1210
+  pose_statistics:
+    +y:
+      samples: 1209
+      acceleration_mean_mps2:
+      - 0.147298898441583
+      - 9.798983416939887
+      - 0.14971918197205433
+      acceleration_norm_mps2: 9.801234044975939
+      acceleration_std_mps2:
+      - 0.021098795148134095
+      - 0.05297729263416008
+      - 0.022965423017305687
+      gyroscope_mean_rad_s:
+      - -0.003073841478788071
+      - -0.014473990691291141
+      - 0.013832726807397467
+      dominant_axis_tilt_deg: 1.2278842349493548
+    -y:
+      samples: 1210
+      acceleration_mean_mps2:
+      - 0.14604414955150982
+      - -9.767931178384575
+      - 0.3146951960384353
+      acceleration_norm_mps2: 9.774090313972211
+      acceleration_std_mps2:
+      - 0.009939506729875373
+      - 0.018170658721494155
+      - 0.010217841137670101
+      gyroscope_mean_rad_s:
+      - -0.002967077412802249
+      - -0.014552619775433925
+      - 0.013843722699194655
+      dominant_axis_tilt_deg: 2.0341461231303932
+    -x:
+      samples: 1210
+      acceleration_mean_mps2:
+      - -9.826026316713696
+      - -0.1082384510137033
+      - 0.40064708186575204
+      acceleration_norm_mps2: 9.834786567243617
+      acceleration_std_mps2:
+      - 0.04692723628677061
+      - 0.04260938352176146
+      - 0.036980696627295494
+      gyroscope_mean_rad_s:
+      - -0.003122753318791732
+      - -0.015089569750341994
+      - 0.013284784595218433
+      dominant_axis_tilt_deg: 2.4184976296503056
+    +x:
+      samples: 1210
+      acceleration_mean_mps2:
+      - 9.741178778971522
+      - 0.07726840653633776
+      - 0.09463733691060223
+      acceleration_norm_mps2: 9.741944910338557
+      acceleration_std_mps2:
+      - 0.03395791062897632
+      - 0.008898185840375864
+      - 0.01747143956824847
+      gyroscope_mean_rad_s:
+      - -0.00305063227082849
+      - -0.013990603323375483
+      - 0.014036338661666498
+      dominant_axis_tilt_deg: 0.7185703010655459
+    -z:
+      samples: 1210
+      acceleration_mean_mps2:
+      - -0.21160869881633884
+      - 0.006628034404509754
+      - -9.512237740351148
+      acceleration_norm_mps2: 9.514593475352246
+      acceleration_std_mps2:
+      - 0.00797903557637656
+      - 0.007034304878716999
+      - 0.039090881380541335
+      gyroscope_mean_rad_s:
+      - -0.0031007651956886637
+      - -0.014620782949861662
+      - 0.013807662190823269
+      dominant_axis_tilt_deg: 1.2750132266193686
+    +z:
+      samples: 1210
+      acceleration_mean_mps2:
+      - -0.06447305758252801
+      - -0.38481058644608035
+      - 10.03687473959174
+      acceleration_norm_mps2: 10.044455709536967
+      acceleration_std_mps2:
+      - 0.049166617080345205
+      - 0.06146133827771732
+      - 0.09715130447897202
+      gyroscope_mean_rad_s:
+      - -0.0028826430022393253
+      - -0.014295358657894641
+      - 0.013776878785141859
+      dominant_axis_tilt_deg: 2.2261997642430083
+  validation:
+    gravity_error_by_pose_mps2:
+      +y: 0.002542838127050473
+      -y: 0.0019705243075769374
+      -x: 0.0019273695846209193
+      +x: 0.0016575593780228104
+      -z: 0.0014758447704910083
+      +z: 0.008566975618679251
+    max_gravity_error_mps2: 0.008566975618679251
+    limit_mps2: 0.2
+    passed: true
+updated_utc: '2026-07-20T06:30:35+00:00'
+camera_depth_range:
+  range_scale: 0.9971814643809273
+  range_bias_m: 0.027757513292978046
+  rms_error_m: 0.012013498025144977
+  max_abs_error_m: 0.014680853614183142
+  points:
+  - true_m: 0.75
+    raw_mean_m: 0.7620986842105265
+    calibrated_m: 0.736416787864628
+    residual_m: -0.013583212135371947
+  - true_m: 1.5
+    raw_mean_m: 1.5323544303797467
+    calibrated_m: 1.5088496636074722
+    residual_m: 0.008849663607472191
+  - true_m: 2.5
+    raw_mean_m: 2.5353506493506495
+    calibrated_m: 2.514680853614183
+    residual_m: 0.014680853614183142
+  - true_m: 4.0
+    raw_mean_m: 4.006564102564101
+    calibrated_m: 3.9900526949137145
+    residual_m: -0.009947305086285496
+  captured_utc: '2026-07-20T06:30:35+00:00'
+  frame_median_std_m:
+  - 0.00029461541985109104
+  - 0.0005999567224466031
+  - 0.0008850547673542833
+  - 0.003630998372920117
+  topic: /camera/depth/image_raw
+  interpretation: Validation result only. Keep Orbbec factory depth calibration unless
+    the residual is repeatable and exceeds the experiment requirement.

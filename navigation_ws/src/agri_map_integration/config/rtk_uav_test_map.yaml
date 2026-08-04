@@ -1,0 +1,14 @@
+rtk_global_localizer:
+  ros__parameters:
+    # The lower-left corner of the orthophoto is map (0, 0).
+    output_frame: map
+    datum_mode: manual
+    datum_latitude: 30.3174149693
+    datum_longitude: 120.3451741109
+    datum_altitude: 0.0
+    two_d_mode: true
+
+    # Only fixed solutions may update the production-style map trajectory.
+    require_rtk_fixed: true
+    fixed_quality: 4
+    publish_selected: true

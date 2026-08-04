@@ -1,0 +1,14 @@
+aoa_utm_to_map:
+  ros__parameters:
+    input_topic: /ground_station/absolute_pose_utm_cov
+    output_topic: /global_pose/aoa_raw_map
+    expected_input_frame: utm
+    output_frame: map
+
+    # EPSG:32651 lower-left origin of the current orthophoto map.
+    origin_easting: 244721.8491
+    origin_northing: 3356945.1346
+    # The orthophoto altitude datum is not yet confirmed. Navigation is 2D.
+    origin_altitude: 0.0
+    map_yaw_deg: 0.0
+    two_d_mode: true

@@ -1,0 +1,7 @@
+# 设置导航模式服务
+int32 mode              # 0: 停止, 1: 自动跟踪, 2: 手动控制
+string parameters       # 额外参数 (JSON格式)
+---
+bool success
+string message
+

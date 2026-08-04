@@ -1,0 +1,44 @@
+map_name: uav_test_map
+
+crs:
+  epsg: 32651
+  name: WGS 84 / UTM zone 51N
+
+utm_origin:
+  easting: 244721.8491
+  northing: 3356945.1346
+
+wgs84_origin:
+  latitude: 30.3174149693
+  longitude: 120.3451741109
+  altitude: 0.0
+
+extent:
+  xmin: 244721.8491
+  ymin: 3356945.1346
+  xmax: 244742.7905
+  ymax: 3356975.0346
+
+raster:
+  width: 419
+  height: 598
+  nav2_resolution: 0.05
+  nominal_width_m: 20.95
+  nominal_height_m: 29.90
+
+ros_map:
+  frame_id: map
+  origin_x: 0.0
+  origin_y: 0.0
+  yaw: 0.0
+
+axis_convention:
+  x: east
+  y: north
+  z: up
+
+validation:
+  occupancy_white_is_free: true
+  occupancy_black_is_occupied: true
+  horizontal_accuracy_report_available: false
+  altitude_datum_confirmed: false

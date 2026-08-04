@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="aa.SLDASM">
+  <link
+    name="body">
+    <inertial>
+      <origin
+        xyz="-0.0136927037464847 0.125001806294515 0.490136098723067"
+        rpy="0 0 0" />
+      <mass
+        value="272.83445392211" />
+      <inertia
+        ixx="24.8518135784829"
+        ixy="-8.90645989037983E-05"
+        ixz="0.000317718881170881"
+        iyy="29.1578048281964"
+        iyz="0.176614063947515"
+        izz="53.627531224839" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://aa.SLDASM/meshes/body.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://aa.SLDASM/meshes/body.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="camera_body">
+    <inertial>
+      <origin
+        xyz="-0.015 -5.55111512312578E-17 5.55111512312578E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.0900000000000001" />
+      <inertia
+        ixx="8.175E-05"
+        ixy="-1.71900494910551E-20"
+        ixz="4.65868120989865E-21"
+        iyy="1.35E-05"
+        iyz="2.35386687166086E-19"
+        izz="8.175E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://aa.SLDASM/meshes/camera_body.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://aa.SLDASM/meshes/camera_body.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="camera_joint"
+    type="fixed">
+    <origin
+      xyz="1.1775 0.000269907864773711 0.382999999999996"
+      rpy="0 0 0" />
+    <parent
+      link="body" />
+    <child
+      link="camera_body" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="wheel1_body">
+    <inertial>
+      <origin
+        xyz="5.55111512312578E-15 0.0530701296424382 -2.36286684662801E-14"
+        rpy="0 0 0" />
+      <mass
+        value="1.56961679253533" />
+      <inertia
+        ixx="0.00345738185565704"
+        ixy="-5.49071530632509E-17"
+        ixz="-3.52664462009044E-06"
+        iyy="0.00423058197777014"
+        iyz="1.92856239920237E-16"
+        izz="0.00344855860898339" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://aa.SLDASM/meshes/wheel1_body.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://aa.SLDASM/meshes/wheel1_body.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheel1_joint"
+    type="revolute">
+    <origin
+      xyz="0.941999999999997 -0.614480092135225 0.022999999999998"
+      rpy="0 0 0" />
+    <parent
+      link="body" />
+    <child
+      link="wheel1_body" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="wheel2_body">
+    <inertial>
+      <origin
+        xyz="1.55431223447522E-14 -0.0530701296424383 -3.24740234702858E-15"
+        rpy="0 0 0" />
+      <mass
+        value="1.56961679253533" />
+      <inertia
+        ixx="0.00344732302919776"
+        ixy="1.6722424636152E-16"
+        ixz="9.34860155760042E-08"
+        iyy="0.00423058197777014"
+        iyz="-1.14749572138913E-16"
+        izz="0.00345861743544268" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://aa.SLDASM/meshes/wheel2_body.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://aa.SLDASM/meshes/wheel2_body.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheel2_joint"
+    type="revolute">
+    <origin
+      xyz="0.942 0.614681941464775 0.0229999999999989"
+      rpy="0 0 0" />
+    <parent
+      link="body" />
+    <child
+      link="wheel2_body" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>

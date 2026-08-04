@@ -1,0 +1,24 @@
+rtabmap:
+  ros__parameters:
+    use_sim_time: false
+
+    # Keep EKF responsible for odom -> base_link.
+    frame_id: bb_robot/base_link
+    odom_frame_id: bb_robot/odom
+    odom_topic: /odometry/filtered
+
+    # Orbbec Gemini 335L default topics from the ROS 2 wrapper.
+    rgb_topic: /camera/color/image_raw
+    depth_topic: /camera/depth/image_raw
+    camera_info_topic: /camera/color/camera_info
+    approx_sync: true
+
+    # RTAB-Map core parameters. Values are strings because RTAB-Map
+    # parameters use slash-separated names internally.
+    Mem/IncrementalMemory: "true"
+    Mem/InitWMWithAllNodes: "false"
+    RGBD/OptimizeFromGraphEnd: "false"
+    RGBD/ProximityBySpace: "true"
+    Grid/FromDepth: "true"
+    Grid/RangeMax: "8.0"
+    Reg/Strategy: "0"

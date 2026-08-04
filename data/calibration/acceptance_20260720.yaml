@@ -1,0 +1,22 @@
+schema_version: 1
+device:
+  model: Orbbec Gemini 335L
+  serial: CP2B7530005C
+profile: agri_rig_calibration_20260720.yaml
+imu:
+  status: accepted
+  maximum_corrected_gravity_error_mps2: 0.008566975618679251
+  online_rate_hz: 200.7438506086067
+  online_stationary_gravity_norm_mps2: 9.816631501762824
+depth:
+  status: accepted_as_validation
+  range_m: [0.75, 4.0]
+  fitted_scale: 0.9971814643809273
+  fitted_bias_m: 0.027757513292978046
+  fitted_rms_error_m: 0.012013498025144977
+  fitted_maximum_absolute_error_m: 0.014680853614183142
+  runtime_policy: use_orbbec_factory_depth
+  reason: >-
+    Residual error is below the 0.05 m navigation grid resolution, while the
+    fitted bias may include the ruler-reference to optical-centre offset.
+next_gate: aoa_axis_and_range_calibration

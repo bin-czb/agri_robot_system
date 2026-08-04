@@ -1,0 +1,64 @@
+# 行偏置 + 停靠（Gazebo 仿真验证用）
+navigation_controller:
+  ros__parameters:
+    # 基本速度限制
+    max_linear_velocity: 0.7
+    max_angular_velocity: 1.6
+    min_linear_velocity: 0.12
+
+    # 控制环与超时（YOLO/仿真可能低频，建议加大）
+    control_loop_hz: 15.0
+    timeout_threshold: 15.0
+    emergency_stop_enabled: true
+    stop_on_invalid_line: false
+
+    # 开启深度：使用仿真深度相机估算距离（更准、更稳）
+    use_depth_estimation: true
+    depth_topic: "/camera/depth/image_raw"
+    camera_info_topic: "/camera/depth/camera_info"
+    depth_window_size: 5
+    depth_scale_m: 1.0     # 仿真通常是 float32 米单位，如果不是需调整
+    depth_sample_offset_y_px: 10
+    depth_min_m: 0.2
+    depth_max_m: 15.0
+
+    # 行偏置导航：关闭 3D 模式，使用 2D 中线偏置
+    row_offset_mode: false   
+    detection_topic: "/trunk_detection/detections"
+    
+    # 基础跟踪参数（用于 2D 偏移跟踪）
+    # 当 row_offset_mode=false 时，系统使用 calculate_control_command
+    # 我们希望它反应灵敏点
+    angle_proportional_gain: 1.2  # 1.5 可能太大了，稍微降一点
+    pixel_offset_gain: 1.2        # 1.5 可能太大了，稍微降一点
+
+    # 每棵树停靠
+    enable_tree_stop: true
+    stop_hold_seconds: 2.0
+    stop_plan_max_alongtrack_m: 15.0
+    # 加大到达判定，确保能停住
+    stop_arrive_epsilon_m: 2.5
+    stop_decel_distance_m: 4.0
+    stop_rearm_travel_m: 1.5
+    stop_min_interval_s: 1.0
+
+    # 兼容原话题
+    line_topic: "/trunk_detection/trunk_line"
+    control_topic: "/chassis_control/cmd"
+    status_topic: "/navigation/status"
+    twist_topic: "/cmd_vel"
+    
+    publish_debug_image: true
+    
+    # 图像相关参数（用于像素偏移计算）
+    image_width: 640
+    image_height: 480
+    camera_horizontal_fov_rad: 1.047
+    use_pixel_offset_steering: true
+    pixel_offset_gain: 1.5
+    distance_scale_factor: 0.1
+    angle_proportional_gain: 1.5
+    max_steering_angle: 0.785
+    target_distance: 1.0
+    min_distance: 0.3
+    arrival_threshold: 0.5

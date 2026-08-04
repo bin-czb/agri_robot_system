@@ -1,0 +1,32 @@
+diff --git a/orbbec_camera/launch/gemini_330_series.launch.py b/orbbec_camera/launch/gemini_330_series.launch.py
+index dcf7a25..dc3e6c4 100644
+--- a/orbbec_camera/launch/gemini_330_series.launch.py
++++ b/orbbec_camera/launch/gemini_330_series.launch.py
+@@ -57,8 +57,8 @@ def generate_launch_description():
+         DeclareLaunchArgument('usb_port', default_value=''),
+         DeclareLaunchArgument('device_num', default_value='1'),
+         DeclareLaunchArgument('point_cloud_qos', default_value='default'),
+-        DeclareLaunchArgument('enable_point_cloud', default_value='false'),
+-        DeclareLaunchArgument('enable_colored_point_cloud', default_value='false'),
++        DeclareLaunchArgument('enable_point_cloud', default_value='true'),
++        DeclareLaunchArgument('enable_colored_point_cloud', default_value='true'),
+         DeclareLaunchArgument('cloud_frame_id', default_value=''),
+         DeclareLaunchArgument('connection_delay', default_value='10'),
+         DeclareLaunchArgument('color_width', default_value='0'),
+@@ -101,14 +101,14 @@ def generate_launch_description():
+         DeclareLaunchArgument('left_ir_height', default_value='0'),
+         DeclareLaunchArgument('left_ir_fps', default_value='0'),
+         DeclareLaunchArgument('left_ir_format', default_value='Y8'),
+-        DeclareLaunchArgument('enable_left_ir', default_value='false'),
++        DeclareLaunchArgument('enable_left_ir', default_value='true'),
+         DeclareLaunchArgument('left_ir_qos', default_value='default'),
+         DeclareLaunchArgument('left_ir_camera_info_qos', default_value='default'),
+         DeclareLaunchArgument('right_ir_width', default_value='0'),
+         DeclareLaunchArgument('right_ir_height', default_value='0'),
+         DeclareLaunchArgument('right_ir_fps', default_value='0'),
+         DeclareLaunchArgument('right_ir_format', default_value='Y8'),
+-        DeclareLaunchArgument('enable_right_ir', default_value='false'),
++        DeclareLaunchArgument('enable_right_ir', default_value='true'),
+         DeclareLaunchArgument('right_ir_qos', default_value='default'),
+         DeclareLaunchArgument('right_ir_camera_info_qos', default_value='default'),
+         DeclareLaunchArgument('enable_ir_auto_exposure', default_value='true'),
