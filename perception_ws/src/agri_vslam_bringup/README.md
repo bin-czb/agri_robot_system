@@ -16,7 +16,7 @@ Gemini 335L RGB-D + 内置 IMU
 启动：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/perception_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 
@@ -91,11 +91,11 @@ USB 3.x 直连接口，避免 RGB、深度、点云和 IMU 同时传输时带宽
 原始同步 IMU、六面校正和 Madgwick 姿态滤波，但不启动 RTAB-Map：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/perception_ws
 source /home/czb/anaconda3/etc/profile.d/conda.sh
 conda deactivate
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
 source install/setup.bash
 
 ros2 launch agri_vslam_bringup rgbd_imu_recording.launch.py
@@ -104,9 +104,9 @@ ros2 launch agri_vslam_bringup rgbd_imu_recording.launch.py
 新开一个终端录制：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/perception_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
 source install/setup.bash
 
 ros2 run agri_vslam_bringup record_rgbd_imu_bag.sh --name indoor_mapping_01
@@ -147,7 +147,7 @@ This package brings up the real RGB-D visual SLAM chain.
 The Orbbec SDK workspace is kept external at:
 
 ```text
-/home/czb/pythonProject01/OrbbecSDK_ROS2
+/home/czb/agri_robot_system/camera_ws/src/OrbbecSDK_ROS2
 ```
 
 Do not clone or rebuild it inside `trunk_tracking_ws`; source its existing `install/setup.bash` before launching this package.
@@ -175,9 +175,9 @@ sudo apt install -y ros-humble-rtabmap ros-humble-rtabmap-ros
 ```
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/perception_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
 source install/setup.bash
 ```
 
@@ -189,11 +189,11 @@ camera is not enumerated, the later nodes will only report missing image topics.
 Recommended clean environment:
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/perception_ws
 source /home/czb/anaconda3/etc/profile.d/conda.sh
 conda deactivate
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
 source install/setup.bash
 ```
 
@@ -218,7 +218,7 @@ any image topics are tested.
 If `list_devices_node` reports `libusb_init failed` or cannot see the camera, install the Orbbec udev rules from the already-built SDK workspace:
 
 ```bash
-cd /home/czb/pythonProject01/OrbbecSDK_ROS2/orbbec_camera/scripts
+cd /home/czb/agri_robot_system/camera_ws/src/OrbbecSDK_ROS2/orbbec_camera/scripts
 sudo bash install_udev_rules.sh
 sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
@@ -735,11 +735,11 @@ Recommended point-cloud contour test:
 Terminal 1:
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/perception_ws
 source /home/czb/anaconda3/etc/profile.d/conda.sh
 conda deactivate
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
 source install/setup.bash
 
 ros2 launch agri_vslam_bringup orbbec_gemini_cloud.launch.py
@@ -748,11 +748,11 @@ ros2 launch agri_vslam_bringup orbbec_gemini_cloud.launch.py
 Terminal 2:
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/perception_ws
 source /home/czb/anaconda3/etc/profile.d/conda.sh
 conda deactivate
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
 source install/setup.bash
 
 ros2 launch agri_vslam_bringup rviz_depth_points.launch.py

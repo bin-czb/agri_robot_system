@@ -7,7 +7,7 @@ WGS-84 定位转换为导航可使用的本地 ENU 位姿，并提供标准 RViz
 ## 系统边界
 
 ```text
-/home/czb/ROS_RTK/ros2_ws
+/home/czb/agri_robot_system/rtk_ws
   UM982串口 + NTRIP
       |
       +--> /fix                  sensor_msgs/NavSatFix
@@ -44,7 +44,7 @@ RTK 单天线只能提供全局位置，静止时不能提供可靠航向，也�
 本包只依赖标准 ROS 2 消息，不要求编译时 source 外部 RTK 工作空间：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/rtk_ws
 source /opt/ros/humble/setup.bash
 
 colcon build --symlink-install \
@@ -64,7 +64,7 @@ ls -l /dev/serial/by-id/
 首次使用时安全保存 NTRIP 凭据。账号会正常显示，密码输入时终端不会回显：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/rtk_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 
@@ -78,7 +78,7 @@ ros2 run agri_rtk_localization configure_ntrip_credentials
 ```
 
 文件权限为 `600`，不会写入工作空间、YAML 或 launch 文件。配置一次后，终端 1
-可直接自动加载凭据并启动 `/home/czb/ROS_RTK` 中的 UM982 驱动：
+可直接自动加载凭据并启动当前 `rtk_ws` 中的 UM982 驱动：
 
 ```bash
 ros2 run agri_rtk_localization start_um982_ntrip
@@ -87,7 +87,7 @@ ros2 run agri_rtk_localization start_um982_ntrip
 也可以继续使用手动环境变量方式：
 
 ```bash
-cd /home/czb/ROS_RTK/ros2_ws
+cd /home/czb/agri_robot_system/rtk_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 
@@ -144,7 +144,7 @@ RTK_FIXED
 终端 2：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/rtk_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 

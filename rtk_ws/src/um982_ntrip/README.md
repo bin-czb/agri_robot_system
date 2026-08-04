@@ -8,7 +8,7 @@ NTRIP 服务、把 RTCM 差分数据写回接收机，并发布标准 ROS 2 定�
 必须使用 Ubuntu 系统 Python 3.10，不要使用 Conda Python：
 
 ```bash
-cd /home/czb/ROS_RTK/ros2_ws
+cd /home/czb/agri_robot_system/rtk_ws
 source /opt/ros/humble/setup.bash
 
 /usr/bin/python3 -m colcon build --symlink-install \
@@ -33,7 +33,7 @@ sudo usermod -aG dialout "$USER"
 推荐使用农业导航工作空间提供的安全配置脚本。首次执行：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/rtk_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 

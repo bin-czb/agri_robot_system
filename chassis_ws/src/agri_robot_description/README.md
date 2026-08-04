@@ -8,7 +8,7 @@ Run the description only:
 
 ```bash
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
+source /home/czb/agri_robot_system/chassis_ws/install/setup.bash
 ros2 launch agri_robot_description description.launch.py
 ```
 

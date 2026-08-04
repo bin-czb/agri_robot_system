@@ -90,7 +90,7 @@ Camera translation should reference `camera_link`, not the optical image plane.
 Terminal 1, camera and AOA:
 
 ```bash
-cd /home/czb/pythonProject01/air_ground_cooperation_system_work
+cd /home/czb/agri_robot_system/camera_ws
 ./tools/rig_calibration/start_calibration_sources.sh all /dev/ttyUSB0
 ```
 
@@ -119,9 +119,9 @@ Terminal 2, set up ROS for every acquisition command:
 
 ```bash
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
-cd /home/czb/pythonProject01/air_ground_cooperation_system_work
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
+source /home/czb/agri_robot_system/scripts/source_all.bash
+cd /home/czb/agri_robot_system/camera_ws
 ```
 
 ## Stage 1: Device And Camera Check
@@ -269,17 +269,20 @@ offsets used for slant-to-horizontal projection.
 /usr/bin/python3 tools/rig_calibration/rig_calibration.py export-aoa
 ```
 
-Start the formal moving-cart AOA chain with the generated file as argument 8:
+正式移动平台 AOA 链使用标准 ROS 2 launch 启动：
 
 ```bash
-cd /home/czb/pythonProject01/air_ground_cooperation_system_work/systems/aoa
-./launch_aoa.sh \
-  /dev/ttyACM0 /dev/ttyUSB0 enu \
-  odometry_relative 0.0 /odometry/filtered /camera/imu/data \
-  ~/.ros/agri_aoa_calibration.params.yaml
+source /home/czb/agri_robot_system/scripts/source_all.bash
+ros2 launch agri_global_localization aoa_global_localization.launch.py \\
+  aoa_serial_port:=/dev/ttyACM0 \\
+  mavlink_port:=/dev/ttyUSB0 \\
+  heading_mode:=imu_relative \\
+  initial_heading_enu_deg:=0.0 \\
+  base_odometry_topic:=/odometry/filtered \\
+  base_imu_topic:=/camera/imu/data
 ```
 
-Replace `0.0` with the surveyed initial ENU heading of the rigid rig.
+将 `0.0` 替换为装置初始 ENU 航向角。导出的参数应审核后写入 AOA 包配置。
 
 ## Final Acceptance
 

@@ -53,9 +53,9 @@ yaw_map = yaw_utm - map_yaw
 先启动 Orbbec 相机及 IMU 姿态滤波，确保 `/camera/imu/data` 有数据，再运行：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/aoa_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
 source install/setup.bash
 
 ros2 launch agri_global_localization aoa_global_localization.launch.py \
@@ -134,12 +134,12 @@ use_odometry:=true base_odometry_topic:=/odometry/filtered heading_mode:=odometr
 
 ```bash
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
+source /home/czb/agri_robot_system/scripts/source_all.bash
 
 ros2 run agri_global_localization aoa_bag_replay \
-  /home/czb/air_ground_cooperation_system/experiments/aoa_exp_20260422_101302 \
-  /home/czb/air_ground_cooperation_system/experiments/aoa_exp_20260422_221348 \
-  /home/czb/air_ground_cooperation_system/experiments/aoa_exp_20260423_105618
+  /home/czb/agri_robot_system/data/rosbags/aoa/aoa_exp_20260422_101302 \
+  /home/czb/agri_robot_system/data/rosbags/aoa/aoa_exp_20260422_221348 \
+  /home/czb/agri_robot_system/data/rosbags/aoa/aoa_exp_20260423_105618
 ```
 
 当前门限回放结果：

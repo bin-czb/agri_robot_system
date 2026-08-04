@@ -117,9 +117,9 @@ WGS84经度:    120.3451741109
 ## 编译
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
 
 colcon build --symlink-install --packages-select \
   agri_vslam_bringup agri_rtk_localization agri_map_integration
@@ -133,10 +133,10 @@ source install/setup.bash
 
 ```bash
 conda deactivate 2>/dev/null || true
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
+source /home/czb/agri_robot_system/scripts/source_all.bash
 ```
 
 RTK驱动终端不依赖Orbbec，但统一使用以上环境也不会产生冲突。
@@ -151,9 +151,9 @@ RTK和AOA是互斥的全局定位源。该模式不要启动AOA。
 
 ```bash
 conda deactivate 2>/dev/null || true
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
+source /home/czb/agri_robot_system/scripts/source_all.bash
 
 ros2 run agri_rtk_localization start_um982_ntrip
 ```
@@ -173,10 +173,10 @@ RTK地图坐标转换
 
 ```bash
 conda deactivate 2>/dev/null || true
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
+source /home/czb/agri_robot_system/scripts/source_all.bash
 
 ros2 launch agri_map_integration integrated_mapping.launch.py \
   start_vslam:=true \
@@ -192,10 +192,10 @@ ros2 launch agri_map_integration integrated_mapping.launch.py \
 
 ```bash
 conda deactivate 2>/dev/null || true
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
+source /home/czb/agri_robot_system/scripts/source_all.bash
 
 ros2 launch agri_map_integration integrated_mapping.launch.py \
   start_vslam:=true \
@@ -208,9 +208,9 @@ ros2 launch agri_map_integration integrated_mapping.launch.py \
 
 ```bash
 conda deactivate 2>/dev/null || true
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
+source /home/czb/agri_robot_system/scripts/source_all.bash
 
 ros2 launch agri_global_localization aoa_global_localization.launch.py \
   aoa_serial_port:=/dev/ttyACM0 \
@@ -232,10 +232,10 @@ ros2 launch agri_global_localization aoa_global_localization.launch.py \
 
 ```bash
 conda deactivate 2>/dev/null || true
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
+source /home/czb/agri_robot_system/scripts/source_all.bash
 
 ros2 run orbbec_camera list_devices_node
 ros2 launch agri_vslam_bringup orbbec_calibrated_imu.launch.py
@@ -267,7 +267,7 @@ ros2 launch agri_vslam_bringup rviz_depth_points.launch.py
 此模式不需要相机和RTK：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 
@@ -297,7 +297,7 @@ ros2 launch agri_map_integration map_visualization.launch.py \
 终端1启动UM982和NTRIP：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 
@@ -307,7 +307,7 @@ ros2 run agri_rtk_localization start_um982_ntrip
 终端2启动地图、RTK转换和RViz：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 
@@ -331,7 +331,7 @@ ros2 topic echo /rtk/diagnostics --once
 终端1先启动UM982/NTRIP：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 ros2 run agri_rtk_localization start_um982_ntrip
@@ -340,9 +340,9 @@ ros2 run agri_rtk_localization start_um982_ntrip
 终端2启动相机、RTAB-Map、地图、RTK转换和RViz：
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
+cd /home/czb/agri_robot_system/navigation_ws
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/OrbbecSDK_ROS2/install/setup.bash
+source /home/czb/agri_robot_system/camera_ws/install/setup.bash
 source install/setup.bash
 
 ros2 launch agri_map_integration integrated_mapping.launch.py

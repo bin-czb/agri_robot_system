@@ -9,7 +9,7 @@
 - `agri_aoa_driver`：AOA 串口节点、飞行器位置节点、协议和几何计算。
 - `agri_global_localization`：UTM 到 `map` 转换、鲁棒滤波和轨迹输出。
 
-旧的普通 Python 脚本已封装为标准 `ament_python` 包，launch 不再引用 `/home/czb/pythonProject01`。
+旧的普通 Python 脚本已封装为标准 `ament_python` 包，launch 不再引用 `旧工程路径`。
 
 ## 构建
 

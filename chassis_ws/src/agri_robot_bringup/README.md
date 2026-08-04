@@ -9,8 +9,8 @@ For the current simulation stage, keep the `bb_robot/` frame prefix. Real-robot 
 Full simulation bringup:
 
 ```bash
-cd /home/czb/pythonProject01/trunk_tracking_ws
-source /home/czb/pythonProject01/trunk_tracking_ws/scripts/trunk_env.bash
+cd /home/czb/agri_robot_system/chassis_ws
+source /home/czb/agri_robot_system/scripts/source_all.bash
 ros2 launch agri_robot_bringup sim_bringup.launch.py headless:=false
 ```
 
@@ -48,7 +48,7 @@ Why this bringup exists:
 
 ```bash
 source /opt/ros/humble/setup.bash
-source /home/czb/pythonProject01/trunk_tracking_ws/install/setup.bash
+source /home/czb/agri_robot_system/chassis_ws/install/setup.bash
 ros2 launch agri_robot_bringup localization.launch.py
 ```
 
@@ -56,7 +56,7 @@ For standard real-robot frames, use:
 
 ```bash
 ros2 launch agri_robot_bringup localization.launch.py \
-  params_file:=/home/czb/pythonProject01/trunk_tracking_ws/src/agri_navigation_stack/agri_robot_bringup/config/ekf_real.yaml \
+  params_file:=/home/czb/agri_robot_system/chassis_ws/src/agri_robot_bringup/config/ekf_real.yaml \
   frame_prefix:='' \
   bridge_gazebo_odom:=false
 ```
