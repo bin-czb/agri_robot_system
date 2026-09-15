@@ -1,56 +1,95 @@
 agri_chassis_can:
   ros__parameters:
+    # -------------------------------------------------------------------------
+    # SocketCAN / TD48150B-2E protocol
+    # -------------------------------------------------------------------------
     interface: can0
+
+    # SAFETY DEFAULT: true means the node receives CAN frames but will not send
+    # enable, speed, or query frames. Keep true until the real controller IDs
+    # and heartbeat have been observed with candump on the actual chassis.
     listen_only: true
-    command_can_id: 100663297      # 0x06000001
-    feedback_can_id: 92274689       # 0x05800001
-    heartbeat_can_id: 117440513     # 0x07000001
+
+    # UNCONFIRMED ON THIS VEHICLE.
+    # The TD48150B manual states the default address is 1 and gives an extended
+    # control-ID example 0x06000001. Its prose uses shortened zero-padding in
+    # several places, so these IDs MUST be checked on the real driver before
+    # listen_only is disabled.
+    command_can_id: 100663297      # 0x06000001 -- verify with real hardware
+    feedback_can_id: 92274689      # 0x05800001 -- verify with real hardware
+    heartbeat_can_id: 117440513    # 0x07000001 -- verify with real hardware
+
     require_heartbeat_before_enable: true
     heartbeat_timeout_s: 2.5
     rx_poll_rate_hz: 100.0
 
-    cmd_vel_topic: /chassis/cmd_vel
+    # -------------------------------------------------------------------------
+    # ROS 2 interface
+    # -------------------------------------------------------------------------
+    # Keep the standard velocity interface used by the existing navigation
+    # system and by the tested Taizhou chassis node. The exact Taizhou gamepad
+    # AUTO/MANUAL implementation is NOT re-created here; it will be ported only
+    # from its verified source code when that source is available.
+    cmd_vel_topic: /cmd_vel
+
+    # Existing agri_robot_system EKF already consumes this topic.
     odom_topic: /wheel/odometry
     odom_frame_id: odom
     base_frame_id: base_link
+
+    # The CAN node intentionally does NOT publish odom -> base_link TF. The
+    # existing robot_localization EKF remains the owner of that transform.
     control_rate_hz: 20.0
     cmd_vel_timeout_s: 0.5
     feedback_timeout_s: 0.3
     speed_query_rate_hz: 20.0
     diagnostic_query_rate_hz: 1.0
 
-    # Bring-up starting values only. Measure before autonomous use.
+    # -------------------------------------------------------------------------
+    # Kinematics -- ALL VALUES BELOW REQUIRE REAL-CHASSIS CONFIRMATION
+    # -------------------------------------------------------------------------
+    # UNCONFIRMED: 0.20 m comes from the current robot model / design estimate,
+    # not a measured effective rolling radius. For a tracked/skid-steer chassis,
+    # calibrate the effective radius from measured travel distance.
     wheel_radius_m: 0.20
+
+    # UNCONFIRMED: 1.22916 m is derived from the current URDF left/right track
+    # joint y positions (+0.61468 / -0.61448). It is NOT yet the calibrated
+    # effective skid-steer track width and must not be treated as final.
     track_width_m: 1.22916
+
+    # UNCONFIRMED: motor-to-drive-wheel reduction ratio. Replace with the actual
+    # transmission ratio before odometry or autonomous motion is evaluated.
     gear_ratio: 1.0
+
+    # UNCONFIRMED ON THIS DRIVER: the manual uses 3000 rpm only as an example.
+    # Read the actual configured maximum/rated speed from the driver setup.
     driver_max_rpm: 3000.0
+
+    # Conservative temporary limits for first lifted-track bench testing only.
+    # These are safety bring-up limits, not vehicle capability limits.
     max_linear_mps: 0.10
     max_angular_radps: 0.30
 
-    # Confirm A/B mapping and signs with tracks off the ground.
-    left_channel: 1
-    right_channel: 2
+    # -------------------------------------------------------------------------
+    # Driver channel mapping / signs -- MUST BE VERIFIED WITH TRACKS LIFTED
+    # -------------------------------------------------------------------------
+    # UNCONFIRMED: TD48150B only names the outputs A/B; it does not know which
+    # physical side is left/right on this robot.
+    left_channel: 1                 # provisional: A=left
+    right_channel: 2                # provisional: B=right
+
+    # UNCONFIRMED: mirrored motor installation may require opposite signs.
     left_command_sign: 1.0
     right_command_sign: 1.0
     left_feedback_sign: 1.0
     right_feedback_sign: 1.0
-    feedback_speed_mode: rpm       # rpm | normalized
 
-chassis_mode_teleop:
-  ros__parameters:
-    auto_cmd_topic: /cmd_vel
-    joy_topic: /joy
-    output_cmd_topic: /chassis/cmd_vel
-    mode_topic: /chassis/control_mode
-    initial_mode: AUTO
-    toggle_button: 0
-    linear_axis: 1
-    angular_axis: 0
-    linear_axis_sign: 1.0
-    angular_axis_sign: 1.0
-    manual_max_linear_mps: 0.10
-    manual_max_angular_radps: 0.30
-    deadman_button: -1
-    joy_timeout_s: 0.5
-    auto_timeout_s: 0.5
-    publish_rate_hz: 20.0
+    # PROVISIONAL / REQUIRES CAN BENCH CONFIRMATION.
+    # The manual's serial-query example shows raw 1000 = 10% of a 3000 rpm
+    # rated speed (=300 rpm), strongly suggesting normalized feedback. The CAN
+    # query page calls the returned value "actual speed" but does not explicitly
+    # state whether its unit is rpm or the -10000..10000 normalized scale.
+    # Therefore use normalized provisionally and verify by commanding a known
+    # low speed while the tracks are lifted.
+    feedback_speed_mode: normalized       # normalized | rpm
