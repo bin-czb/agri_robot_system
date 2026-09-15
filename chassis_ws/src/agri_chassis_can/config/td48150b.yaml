@@ -1,0 +1,56 @@
+agri_chassis_can:
+  ros__parameters:
+    interface: can0
+    listen_only: true
+    command_can_id: 100663297      # 0x06000001
+    feedback_can_id: 92274689       # 0x05800001
+    heartbeat_can_id: 117440513     # 0x07000001
+    require_heartbeat_before_enable: true
+    heartbeat_timeout_s: 2.5
+    rx_poll_rate_hz: 100.0
+
+    cmd_vel_topic: /chassis/cmd_vel
+    odom_topic: /wheel/odometry
+    odom_frame_id: odom
+    base_frame_id: base_link
+    control_rate_hz: 20.0
+    cmd_vel_timeout_s: 0.5
+    feedback_timeout_s: 0.3
+    speed_query_rate_hz: 20.0
+    diagnostic_query_rate_hz: 1.0
+
+    # Bring-up starting values only. Measure before autonomous use.
+    wheel_radius_m: 0.20
+    track_width_m: 1.22916
+    gear_ratio: 1.0
+    driver_max_rpm: 3000.0
+    max_linear_mps: 0.10
+    max_angular_radps: 0.30
+
+    # Confirm A/B mapping and signs with tracks off the ground.
+    left_channel: 1
+    right_channel: 2
+    left_command_sign: 1.0
+    right_command_sign: 1.0
+    left_feedback_sign: 1.0
+    right_feedback_sign: 1.0
+    feedback_speed_mode: rpm       # rpm | normalized
+
+chassis_mode_teleop:
+  ros__parameters:
+    auto_cmd_topic: /cmd_vel
+    joy_topic: /joy
+    output_cmd_topic: /chassis/cmd_vel
+    mode_topic: /chassis/control_mode
+    initial_mode: AUTO
+    toggle_button: 0
+    linear_axis: 1
+    angular_axis: 0
+    linear_axis_sign: 1.0
+    angular_axis_sign: 1.0
+    manual_max_linear_mps: 0.10
+    manual_max_angular_radps: 0.30
+    deadman_button: -1
+    joy_timeout_s: 0.5
+    auto_timeout_s: 0.5
+    publish_rate_hz: 20.0
