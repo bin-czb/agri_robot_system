@@ -20,13 +20,12 @@ setup(
     zip_safe=True,
     maintainer="czb",
     maintainer_email="czb@example.com",
-    description="TD48150B-2E SocketCAN chassis control, odometry, and AUTO/MANUAL joystick gate",
+    description="TD48150B-2E SocketCAN chassis control and wheel odometry",
     license="MIT",
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
             "chassis_can_node = agri_chassis_can.chassis_can_node:main",
-            "chassis_mode_teleop = agri_chassis_can.chassis_mode_teleop:main",
         ],
     },
 )
