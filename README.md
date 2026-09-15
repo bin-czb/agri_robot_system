@@ -9,7 +9,7 @@ agri_robot_system/
 ├── camera_ws/       Gemini 335L 驱动与相机启动
 ├── aoa_ws/          AOA 驱动、无人机位置源与 AOA 全局定位
 ├── rtk_ws/          UM982、NTRIP 与 RTK 地图定位
-├── chassis_ws/      公共消息、机器人模型、底盘通信、控制和仿真
+├── chassis_ws/      公共消息、机器人模型、TD48150B CAN 底盘、EKF 和仿真
 ├── perception_ws/   RTAB-Map、深度障碍、树干检测和点云处理
 ├── navigation_ws/   正射地图、树坐标、Nav2、路径规划和系统集成
 ├── scripts/         统一构建、环境加载和检查脚本
@@ -30,6 +30,7 @@ Nav2
 robot_localization
 RTAB-Map ROS 2
 Orbbec Gemini 335L SDK
+SocketCAN / can-utils
 ```
 
 ## 首次构建
@@ -120,6 +121,22 @@ ros2 launch agri_map_integration integrated_mapping.launch.py \
 
 AOA 与 RTK 是两种互斥全局定位模式。正式系统后续由定位源选择器统一发布 `map -> odom`，Nav2 不直接区分定位源。
 
+### TD48150B CAN 底盘
+
+新底盘的正式 ROS 2 链路位于 `chassis_ws/src/agri_chassis_can`。Nav2 继续发布标准 `/cmd_vel`，A 键 AUTO/MANUAL 节点负责将自动速度或手柄速度统一转发到 `/chassis/cmd_vel`，CAN 节点只订阅这一最终入口。
+
+首次实车连接必须只监听：
+
+```bash
+source /home/czb/agri_robot_system/scripts/source_all.bash
+ros2 run agri_chassis_can setup_can.sh can0 250000
+ros2 launch agri_chassis_can chassis_bringup.launch.py \
+  listen_only:=true \
+  start_joy:=true
+```
+
+在确认实际扩展 CAN ID、A/B 与左右履带映射、转向符号、减速比、有效轮径和转速反馈单位之前，不允许主动使能。详细步骤见 `chassis_ws/README.md` 和 `agri_chassis_can/README.md`。
+
 ### Gazebo 仿真
 
 ```bash
@@ -140,6 +157,8 @@ source /home/czb/agri_robot_system/scripts/source_all.bash
 ros2 launch agri_nav2_config nav2_minimal_formal.launch.py
 ```
 
+实车底盘工作时，Nav2 `/cmd_vel` 不直接访问 CAN，而是经过 `chassis_mode_teleop` 的 AUTO/MANUAL 仲裁后进入 `/chassis/cmd_vel`。手柄模式因此和自动模式共用同一条 ROS 2 底盘下游通信链。
+
 ## Git 管理
 
 本目录作为独立项目管理，建议远端仓库名使用 `agri_robot_system_ros2`，不要绑定或强推到已有项目。Orbbec SDK 保持独立上游仓库，通过 `camera_ws/orbbec.repos` 固定版本，不纳入主仓库历史。
@@ -149,5 +168,6 @@ ros2 launch agri_nav2_config nav2_minimal_formal.launch.py
 - 不将 NTRIP 密码提交到 Git。
 - 不提交 `build/install/log` 和 rosbag。
 - AOA 与 RTK 不同时发布 `/global_pose/selected`。
-- 在底盘实车尺寸确认前，不进行自主运动测试。
-- 底盘遥控和 Nav2 `/cmd_vel` 后续必须经过命令仲裁与急停层。
+- 在底盘实车尺寸、CAN ID、A/B 左右映射和方向符号确认前，不进行自主运动测试。
+- 底盘 CAN 节点只订阅 `/chassis/cmd_vel`；Nav2 和手柄必须经过 AUTO/MANUAL 仲裁节点，禁止多个控制源直接同时驱动底盘。
+- CAN 节点不发布 `odom -> base_link`；该 TF 继续由 `robot_localization` EKF 唯一发布。
