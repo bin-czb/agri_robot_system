@@ -3,16 +3,18 @@
 <package format="3">
   <name>agri_chassis_can</name>
   <version>0.1.0</version>
-  <description>TD48150B-2E CAN chassis driver and wheel odometry for agri_robot_system.</description>
+  <description>TD48150B-2E CAN chassis driver, wheel odometry and AUTO/MANUAL command selection for agri_robot_system.</description>
   <maintainer email="czb@example.com">czb</maintainer>
   <license>MIT</license>
 
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
   <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
   <depend>diagnostic_msgs</depend>
+  <exec_depend>joy</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
