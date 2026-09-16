@@ -14,11 +14,11 @@ MANUAL:
     agri_chassis_can -> TD48150B CAN
 
 The important design rule is that Nav2 and the joystick never publish directly to
-the CAN driver at the same time.  This node is the single command selector and
+the CAN driver at the same time. This node is the single command selector and
 the CAN node has exactly one ROS velocity input: /chassis/cmd_vel.
 
 The user-facing behavior follows the tested Taizhou usage: the A button toggles
-AUTO <-> MANUAL.  The current public Taizhou mirror does not contain the
+AUTO <-> MANUAL. The current public Taizhou mirror does not contain the
 original chassis_bringup.launch.py, so the A/axis numeric indices remain ROS
 parameters and must be checked once with `ros2 topic echo /joy` on the actual
 controller before active motion.
@@ -44,31 +44,27 @@ class ChassisModeTeleop(Node):
 
         # /cmd_vel is the FINAL Nav2 command in ROS 2 Humble navigation_launch.py:
         # controller_server publishes /cmd_vel_nav and velocity_smoother publishes
-        # the smoothed result on /cmd_vel.  Do not subscribe to /cmd_vel_nav here,
+        # the smoothed result on /cmd_vel. Do not subscribe to /cmd_vel_nav here,
         # otherwise the existing Nav2 velocity_smoother would be bypassed.
         self.declare_parameter("auto_cmd_topic", "/cmd_vel")
         self.declare_parameter("joy_topic", "/joy")
         self.declare_parameter("output_cmd_topic", "/chassis/cmd_vel")
         self.declare_parameter("mode_topic", "/chassis/control_mode")
-
         self.declare_parameter("initial_mode", self.AUTO)
 
-        # Taizhou/Xbox-style defaults.  These are deliberately parameters because
-        # Linux joystick mappings can differ by controller/kernel.  Verify once on
-        # the real gamepad before disabling chassis listen_only mode.
-        self.declare_parameter("toggle_button", 0)  # A button on common Xbox mapping
-        self.declare_parameter("linear_axis", 1)    # left stick vertical
-        self.declare_parameter("angular_axis", 0)   # left stick horizontal
+        # Taizhou/Xbox-style defaults. Keep them parameters because Linux gamepad
+        # mappings can vary; verify once on the real controller before motion.
+        self.declare_parameter("toggle_button", 0)
+        self.declare_parameter("linear_axis", 1)
+        self.declare_parameter("angular_axis", 0)
         self.declare_parameter("linear_axis_sign", 1.0)
         self.declare_parameter("angular_axis_sign", 1.0)
 
-        # These are bring-up limits, intentionally aligned with the CAN node's
-        # current conservative limits.  The CAN node clamps again downstream.
+        # First-bring-up limits. The CAN driver clamps independently downstream.
         self.declare_parameter("manual_max_linear_mps", 0.10)
         self.declare_parameter("manual_max_angular_radps", 0.30)
 
-        # Source watchdogs prevent a stale Nav2 command or stale joystick state
-        # from surviving a cable disconnect, node crash, or mode change.
+        # Selected-source watchdogs.
         self.declare_parameter("joy_timeout_s", 0.50)
         self.declare_parameter("auto_timeout_s", 0.50)
         self.declare_parameter("publish_rate_hz", 20.0)
@@ -102,7 +98,6 @@ class ChassisModeTeleop(Node):
             str(self.get_parameter("mode_topic").value),
             10,
         )
-
         self.create_subscription(
             Twist,
             str(self.get_parameter("auto_cmd_topic").value),
@@ -122,14 +117,12 @@ class ChassisModeTeleop(Node):
         self.manual_linear = 0.0
         self.manual_angular = 0.0
 
-        # Do not treat a button already held when joy_node first appears as a new
-        # A-button press.  The first Joy message only establishes button state.
+        # The first Joy message only establishes button state. If A was already
+        # held before joy_node started, startup must not count it as a new press.
         self.joy_button_state_initialized = False
         self.last_toggle_pressed = False
 
-        # A command received before this timestamp is not allowed to move the
-        # robot after a mode switch.  This prevents stale cached commands from
-        # becoming active when AUTO/MANUAL changes.
+        # Commands older than this timestamp are forbidden after a mode switch.
         self.mode_switch_time = time.monotonic()
 
         publish_rate_hz = max(1.0, float(self.get_parameter("publish_rate_hz").value))
@@ -165,19 +158,18 @@ class ChassisModeTeleop(Node):
     def _joy_cb(self, msg: Joy) -> None:
         now = time.monotonic()
         pressed = self._button(msg, self.toggle_button)
+        toggled = False
 
         if not self.joy_button_state_initialized:
             self.last_toggle_pressed = pressed
             self.joy_button_state_initialized = True
         else:
-            # Rising edge only: holding A cannot repeatedly flip the mode.
+            # Rising edge only: holding A cannot repeatedly flip AUTO/MANUAL.
             if pressed and not self.last_toggle_pressed:
                 self._toggle_mode(now)
+                toggled = True
             self.last_toggle_pressed = pressed
 
-        # Store manual axes even while AUTO is active.  mode_switch_time below
-        # still requires a NEW Joy message after switching to MANUAL, so the
-        # cached stick position from AUTO can never move the robot immediately.
         self.manual_linear = (
             self._axis(msg, self.linear_axis)
             * self.linear_axis_sign
@@ -188,7 +180,12 @@ class ChassisModeTeleop(Node):
             * self.angular_axis_sign
             * self.manual_max_angular_radps
         )
-        self.last_joy_time = now
+
+        # The Joy message that contains the A-button transition is intentionally
+        # NOT accepted as a motion sample. A subsequent Joy message is required.
+        # With joy_node autorepeat at 20 Hz this adds only about 50 ms, while
+        # preventing a cached stick deflection from moving the chassis at switch.
+        self.last_joy_time = 0.0 if toggled else now
 
     def _toggle_mode(self, now: float) -> None:
         self.mode = self.MANUAL if self.mode == self.AUTO else self.AUTO
@@ -208,23 +205,22 @@ class ChassisModeTeleop(Node):
 
         if self.mode == self.AUTO:
             auto_is_fresh = (
-                self.last_auto_time >= self.mode_switch_time
+                self.last_auto_time > self.mode_switch_time
                 and now - self.last_auto_time <= self.auto_timeout_s
             )
             if auto_is_fresh:
                 out = self.last_auto_cmd
         else:
             joy_is_fresh = (
-                self.last_joy_time >= self.mode_switch_time
+                self.last_joy_time > self.mode_switch_time
                 and now - self.last_joy_time <= self.joy_timeout_s
             )
             if joy_is_fresh:
                 out.linear.x = float(self.manual_linear)
                 out.angular.z = float(self.manual_angular)
 
-        # Publish continuously so the downstream chassis node receives a clear
-        # zero command when the selected source is stale.  The CAN node has its
-        # own independent watchdog as the second safety layer.
+        # Publish continuously so stale selected sources become an explicit zero.
+        # The CAN driver also has an independent cmd_vel watchdog.
         self.cmd_pub.publish(out)
 
 
@@ -236,7 +232,6 @@ def main(args=None) -> None:
     except KeyboardInterrupt:
         pass
     finally:
-        # Best effort stop on shutdown.  The CAN node independently times out too.
         node.cmd_pub.publish(Twist())
         node.destroy_node()
         rclpy.shutdown()
