@@ -2,69 +2,76 @@
 
 ## 职责
 
-`chassis_ws` 负责公共接口、机器人 URDF、实车底盘通信与控制、轮式里程计、EKF 和 Gazebo 机器人环境。
+`chassis_ws` 负责公共接口、机器人 URDF、实车底盘通信与控制、轮式里程计、命令仲裁、EKF 和 Gazebo 机器人环境。
 
 本次 TD48150B-2E 新底盘开发严格限制在 `chassis_ws` 内进行，不修改 `navigation_ws`、`perception_ws`、`rtk_ws`、`aoa_ws`、`camera_ws` 的现有结构。
 
-## ROS 2 包
+当前主要包：
 
-- `agri_chassis_can`：新 TD48150B-2E SocketCAN 驱动、差速/滑移转向运动学、实际转速反馈、`/wheel/odometry` 与安全看门狗。
+- `agri_chassis_can`：TD48150B-2E SocketCAN 驱动、差速/滑移转向运动学、AUTO/MANUAL 命令选择、`joy_node` 启动、实际转速反馈、`/wheel/odometry` 与安全看门狗。
 - `agri_robot_description`：机器人 URDF、传感器安装 TF。
 - `agri_robot_bringup`：EKF、仿真底盘和统一局部定位入口。
 - `trunk_gazebo_worlds`：果园 Gazebo 世界和机器人资源。
 - `trunk_interfaces`：树干、AOA 以及旧底盘接口共用消息。
-- `agri_chassis_serial`、`serial_bridge_ros2`、`chassis_control`：旧 RS485/Modbus 底盘链路，保留用于历史兼容，不删除、不重构，不与新 CAN 实车链路同时启动。
+- `agri_chassis_serial`、`serial_bridge_ros2`、`chassis_control`：旧 RS485/Modbus 底盘链路，保留历史兼容，不删除、不重构，不与新 CAN 实车链路同时启动。
 
-## 与 Taizhou 的原则
+## Taizhou 逻辑如何适配到新系统
 
-Taizhou 已经完成并验证过底盘 ROS 通信链，因此新系统优先复用其**已经验证的 ROS 层逻辑**，而不是重新设计一套类似方案。
+Taizhou 已经实机验证了“标准 ROS 速度入口 -> 底盘节点 -> SocketCAN -> 底盘”和轮速里程计链路。用户确认 Taizhou 实际使用的 `chassis_bringup.launch.py` 中还启动了 `joy_node`，并通过 A 键在自动与手柄模式间切换。
 
-目前从 GitHub 上的 Taizhou 镜像可以确认并借鉴：
+当前公开的 Taizhou GitHub 镜像没有保存该 `chassis_bringup.launch.py`，因此这里不声称逐字复制原文件；但使用逻辑严格保持：A 键切换 AUTO/MANUAL，且手柄和自动导航最终必须经过同一个 ROS 底盘节点，手柄不能绕开 ROS 节点直接发 CAN。
 
-```text
-标准 /cmd_vel 作为底盘速度入口
-SocketCAN 负责 CAN 收发
-轮速反馈生成底盘里程计
-cmd_vel 超时停车
-```
-
-### 手柄逻辑
-
-用户要求手柄必须使用 Taizhou 已经调通的逻辑：A 键切换自动/手柄模式，并且手柄模式必须经过与自动导航相同的 ROS 2 底盘控制链路，以真实验证 ROS -> 底盘节点 -> CAN 是否正常。
-
-此前本分支曾临时写过一个功能相似的 `chassis_mode_teleop.py`，但它不是从 Taizhou 原始已验证源码直接移植。为避免引入未经验证的新逻辑，该临时节点已经删除。
-
-当前 GitHub 的 Taizhou 镜像中没有找到 `/joy` / `sensor_msgs/Joy` / A 键 AUTO-MANUAL 切换的原始源文件，因此在原文件出现之前：
+同时必须适配当前 `agri_robot_system` 的真实 Nav2 信息流。ROS 2 Humble `navigation_launch.py` 中，`controller_server` 输出被重映射为 `/cmd_vel_nav`，现有 `velocity_smoother` 读取它并把最终平滑结果发布为 `/cmd_vel`。因此当前系统使用：
 
 ```text
-不自己重写 A 键模式切换
-不猜手柄 axes/buttons 映射
-不猜 AUTO/MANUAL 切换时 Nav2 的暂停/恢复行为
-不自行增加新的 cmd_vel mux 逻辑
+AUTO:
+controller_server
+   -> /cmd_vel_nav
+   -> velocity_smoother
+   -> /cmd_vel
+   -> chassis_mode_teleop
+   -> /chassis/cmd_vel
+   -> agri_chassis_can
+   -> TD48150B
+
+MANUAL:
+手柄
+   -> joy_node
+   -> /joy
+   -> chassis_mode_teleop
+   -> /chassis/cmd_vel
+   -> agri_chassis_can
+   -> TD48150B
 ```
 
-后续找到 Taizhou 原始手柄源码后，只在 `chassis_ws` 内做必要的 ROS 2/新底盘适配，保留其原有控制逻辑。
+不能让 `agri_chassis_can` 直接订阅 `/cmd_vel` 并同时再接一个手柄 `Twist` 发布者，否则 ROS 2 不提供“谁优先”的天然仲裁，两个发布源会在底盘节点前竞争。现在 CAN 节点只订阅 `/chassis/cmd_vel`，由 `chassis_mode_teleop` 保证任意时刻只有一个控制源能够进入下游。
+
+A 键切换采用上升沿，切换时先发零速度，并要求新模式在切换后收到一帧新数据才恢复运动，避免旧 Nav2 命令或旧摇杆位置跨模式生效。AUTO 和 MANUAL 都有 0.5 s 源超时，CAN 节点还有独立的 `cmd_vel` 超时作为第二层安全保护。
 
 ## 构建
-
-完整 chassis 工作空间：
 
 ```bash
 cd /home/czb/agri_robot_system/chassis_ws
 source /opt/ros/humble/setup.bash
 colcon build --symlink-install
+source install/setup.bash
 ```
 
 只构建新 CAN 包：
 
 ```bash
 colcon build --symlink-install --packages-select agri_chassis_can
-source install/setup.bash
 ```
 
-## TD48150B 实车 CAN 首次联调
+需要 ROS 2 `joy` 包：
 
-说明书默认 CAN 波特率为 `250 kbit/s`，采用扩展帧。第一次连接实车必须先被动监听：
+```bash
+sudo apt install ros-humble-joy
+```
+
+## TD48150B 首次联调
+
+先配置 CAN：
 
 ```bash
 source /home/czb/agri_robot_system/scripts/source_all.bash
@@ -72,82 +79,54 @@ ros2 run agri_chassis_can setup_can.sh can0 250000
 candump can0
 ```
 
-然后只监听启动：
+第一次必须保持只监听：
 
 ```bash
 ros2 launch agri_chassis_can chassis_bringup.launch.py \
-  listen_only:=true
+  listen_only:=true \
+  start_joy:=false
 ```
 
-此时不允许使能和运动。
+检查手柄时仍然保持 CAN 只监听：
 
-当前临时 CAN ID：
-
-```text
-控制 ID: 0x06000001
-反馈 ID: 0x05800001
-心跳 ID: 0x07000001
+```bash
+ros2 launch agri_chassis_can chassis_bringup.launch.py \
+  listen_only:=true \
+  start_joy:=true \
+  joy_device_id:=0
 ```
 
-这些值根据厂家说明书默认地址 1 推导，但说明书不同页面存在 ID 补零写法差异，因此仍标记为**未实机确认**。实际值必须以真实驱动器 `candump` 和查询响应为准。
+观察：
+
+```bash
+ros2 topic echo /joy
+ros2 topic echo /chassis/control_mode
+ros2 topic echo /chassis/cmd_vel
+```
+
+ROS 2 `joy_node` 使用 `device_id` 选择 SDL 手柄设备。当前映射默认预期 `button[0]` 是 A、`axis[1]` 是前后、`axis[0]` 是左右，但当前公开 Taizhou 仓库没有原始 launch 文件可核对这些数字，因此第一次实际连接手柄必须通过 `/joy` 确认按钮、轴编号和正负方向。确认之前不能关闭 `listen_only`。
 
 ## 未确认数据
 
-以下参数当前均不能视为最终数据：
+当前仍不能视为正式值的内容包括：CAN command/feedback/heartbeat ID、驱动器地址、A/B 对应左右履带关系、左右控制与反馈符号、减速比、有效驱动轮半径、履带滑移等效轮距、驱动器实际最大/额定转速、CAN 转速反馈最终单位、里程计协方差、正式最大线速度和角速度，以及实际手柄的按钮/轴编号和方向。
 
-```text
-CAN command / feedback / heartbeat ID
-驱动器实际地址
-A/B 通道对应左/右哪一侧
-左右控制方向符号
-左右反馈方向符号
-电机到驱动轮实际减速比
-有效驱动轮/链轮半径
-履带滑移转向等效轮距
-驱动器实际设置的最大/额定转速
-CAN 转速查询的最终单位确认
-轮式里程计协方差
-正式最大线速度与角速度
-Taizhou 手柄按键/轴映射与 AUTO/MANUAL 源码
-```
-
-`agri_chassis_can/config/td48150b.yaml` 对这些临时值逐项写有 `UNCONFIRMED` 注释；更详细的来源、风险和确认方法见：
+这些临时值均在 `agri_chassis_can/config/td48150b.yaml` 中有 `UNCONFIRMED` 或验证说明，更详细的来源和验证方法统一写在：
 
 ```text
 chassis_ws/src/agri_chassis_can/README.md
 ```
 
-特别说明：当前 `track_width_m=1.22916` 只由现有 URDF 左右履带 joint 的横向坐标推得，不是已经标定的滑移转向等效轮距；`driver_max_rpm=3000` 只是厂家说明书示例值；二者都不能直接用于最终实车导航标定。
+特别地，当前 `track_width_m=1.22916` 只是由现有 URDF 左右履带 joint 横向坐标推得，不是已标定的履带滑移等效轮距；`driver_max_rpm=3000` 是厂家说明书示例值，不代表当前驱动器最终参数。
 
-## ROS 速度链路
+## 里程计与原系统关系
 
-当前阶段保持标准底盘输入：
-
-```text
-Nav2 /cmd_vel
-      |
-      v
-agri_chassis_can
-      |
-      v
-TD48150B-2E
-```
-
-`agri_chassis_can` 的默认 YAML 使用 `/cmd_vel`，与 Taizhou 已验证底盘节点和 ROS 2 Nav2 常规接口一致。
-
-手柄逻辑移植完成后，手柄必须进入**同一底盘 ROS 控制入口**，不能绕过 ROS 底盘节点直接发送 CAN。具体切换方式严格以 Taizhou 原始代码为准，不在此处先行假设。
-
-## 里程计与 EKF
-
-新 CAN 节点查询 TD48150B A/B 实际转速，经通道映射、符号、减速比、轮径和等效轮距换算，发布：
+新 CAN 节点发布：
 
 ```text
 /wheel/odometry
 ```
 
-现有 `agri_robot_bringup/config/ekf_real.yaml` 已把 `/wheel/odometry` 作为轮式里程计输入，因此不需要为了新 CAN 底盘去改定位/导航工作空间。
-
-TF 职责保持不变：
+现有 `robot_localization` 继续融合轮式里程计和相机 IMU：
 
 ```text
 TD48150B wheel odom + camera IMU
@@ -162,33 +141,10 @@ TD48150B wheel odom + camera IMU
          odom -> base_link
 ```
 
-`agri_chassis_can` **不发布** `odom -> base_link`，避免破坏现有 TF 所有权。
+`agri_chassis_can` 不发布 `odom -> base_link`，所以不会与现有 EKF 抢 TF，也不要求为了换底盘修改导航、VSLAM、RTK 或 AOA 工作空间。
 
-## 安全约束
+## 安全顺序
 
-首次实车必须按以下顺序：
+首次实车应依次完成：被动确认 CAN 心跳和 ID；`listen_only=true` 检查手柄 `/joy` 和 AUTO/MANUAL ROS 信息流；只做非运动 CAN 查询；履带架空确认 A/B、方向与反馈单位；标定减速比、有效轮径与等效轮距；验证 `/wheel/odometry -> EKF -> /odometry/filtered`；最后才关闭 `listen_only` 并进行 Nav2 实车闭环。
 
-1. `listen_only=true`，只观察心跳和实际 CAN ID；
-2. 确认 ID 后只测试非运动查询；
-3. 履带架空，单路低速确认 A/B 左右映射与方向；
-4. 确认反馈单位、减速比和最大转速；
-5. 低速直线标定有效轮径；
-6. 原地/定半径转向标定等效轮距；
-7. 验证 `/wheel/odometry -> EKF -> /odometry/filtered`；
-8. 最后才接 Nav2 与 Taizhou 原始手柄逻辑。
-
-默认速度上限 `0.10 m/s`、`0.30 rad/s` 只用于首次安全联调，不代表底盘最终性能。
-
-软件急停：
-
-```bash
-ros2 service call /agri_chassis_can/estop std_srvs/srv/Trigger '{}'
-```
-
-清除软件急停后驱动器仍保持未使能：
-
-```bash
-ros2 service call /agri_chassis_can/clear_estop std_srvs/srv/Trigger '{}'
-```
-
-详细协议、参数状态和实机确认流程统一维护在 `agri_chassis_can/README.md`，避免在系统其他工作空间复制未确认参数。
+默认 `0.10 m/s` 和 `0.30 rad/s` 只是首次联调限速。软件急停接口存在，但不能替代实体急停或可切断驱动动力/使能的硬件安全措施。
