@@ -16,21 +16,22 @@ agri_chassis_can:
     # several places, so these IDs MUST be checked on the real driver before
     # listen_only is disabled.
     command_can_id: 100663297      # 0x06000001 -- verify with real hardware
-    feedback_can_id: 92274689      # 0x05800001 -- verify with real hardware
-    heartbeat_can_id: 117440513    # 0x07000001 -- verify with real hardware
+    feedback_can_id: 92274689       # 0x05800001 -- verify with real hardware
+    heartbeat_can_id: 117440513     # 0x07000001 -- verify with real hardware
 
     require_heartbeat_before_enable: true
     heartbeat_timeout_s: 2.5
     rx_poll_rate_hz: 100.0
 
     # -------------------------------------------------------------------------
-    # ROS 2 interface
+    # ROS 2 command interface
     # -------------------------------------------------------------------------
-    # Keep the standard velocity interface used by the existing navigation
-    # system and by the tested Taizhou chassis node. The exact Taizhou gamepad
-    # AUTO/MANUAL implementation is NOT re-created here; it will be ported only
-    # from its verified source code when that source is available.
-    cmd_vel_topic: /cmd_vel
+    # IMPORTANT: the CAN driver must have only ONE velocity-command publisher.
+    # Nav2 and the joystick are selected upstream by chassis_mode_teleop, which
+    # publishes the final command on /chassis/cmd_vel.  Do not change this back
+    # to /cmd_vel while the selector is active, otherwise Nav2 /cmd_vel and a
+    # manual publisher could race each other at the CAN driver.
+    cmd_vel_topic: /chassis/cmd_vel
 
     # Existing agri_robot_system EKF already consumes this topic.
     odom_topic: /wheel/odometry
@@ -93,3 +94,51 @@ agri_chassis_can:
     # Therefore use normalized provisionally and verify by commanding a known
     # low speed while the tracks are lifted.
     feedback_speed_mode: normalized       # normalized | rpm
+
+
+chassis_mode_teleop:
+  ros__parameters:
+    # -------------------------------------------------------------------------
+    # Command information flow
+    # -------------------------------------------------------------------------
+    # Current agri_robot_system uses Nav2 Humble navigation_launch.py.  In that
+    # upstream launch, controller_server is remapped to /cmd_vel_nav and the
+    # velocity_smoother publishes the FINAL smoothed command on /cmd_vel.
+    # Therefore AUTO must subscribe to /cmd_vel, not /cmd_vel_nav.
+    auto_cmd_topic: /cmd_vel
+
+    # joy_node publishes sensor_msgs/Joy here. joy_node itself does not publish
+    # geometry_msgs/Twist and does not perform AUTO/MANUAL selection.
+    joy_topic: /joy
+
+    # This is the only velocity topic consumed by agri_chassis_can.
+    output_cmd_topic: /chassis/cmd_vel
+    mode_topic: /chassis/control_mode
+
+    # Taizhou usage is A-button AUTO/MANUAL toggle. AUTO is kept as the startup
+    # mode so a normal Nav2 run behaves like the existing navigation system.
+    # Mode switching always sends zero first and requires a fresh message from
+    # the newly selected source before motion resumes.
+    initial_mode: AUTO
+
+    # GAMEPAD MAPPING: expected Taizhou/Xbox convention, but the exact original
+    # chassis_bringup.launch.py is not present in the current public Taizhou
+    # mirror. Verify these three indices once with `ros2 topic echo /joy` before
+    # active motion. Do not treat them as hardware-independent constants.
+    toggle_button: 0                # expected A button
+    linear_axis: 1                  # expected left-stick vertical
+    angular_axis: 0                 # expected left-stick horizontal
+    linear_axis_sign: 1.0           # VERIFY on actual controller
+    angular_axis_sign: 1.0          # VERIFY on actual controller
+
+    # Temporary first-bring-up limits. The downstream CAN node applies its own
+    # independent clamp as a second layer.
+    manual_max_linear_mps: 0.10
+    manual_max_angular_radps: 0.30
+
+    # Selected-source watchdogs.  Nav2 velocity_smoother currently runs at
+    # 20 Hz and joy_node is launched with a 20 Hz autorepeat rate, so 0.5 s is
+    # deliberately much longer than the normal update interval.
+    joy_timeout_s: 0.5
+    auto_timeout_s: 0.5
+    publish_rate_hz: 20.0
