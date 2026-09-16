@@ -11,7 +11,7 @@ def generate_launch_description():
     params_file = LaunchConfiguration("params_file")
     listen_only = LaunchConfiguration("listen_only")
     start_joy = LaunchConfiguration("start_joy")
-    joy_device = LaunchConfiguration("joy_device")
+    joy_device_id = LaunchConfiguration("joy_device_id")
     joy_deadzone = LaunchConfiguration("joy_deadzone")
     joy_autorepeat_rate = LaunchConfiguration("joy_autorepeat_rate")
 
@@ -38,9 +38,12 @@ def generate_launch_description():
             ),
         ),
         DeclareLaunchArgument(
-            "joy_device",
-            default_value="/dev/input/js0",
-            description="Linux joystick device used by joy_node.",
+            "joy_device_id",
+            default_value="0",
+            description=(
+                "SDL joystick index used by ROS 2 joy_node. This is device_id, not "
+                "a /dev/input/jsX path."
+            ),
         ),
         DeclareLaunchArgument(
             "joy_deadzone",
@@ -56,7 +59,7 @@ def generate_launch_description():
             ),
         ),
 
-        # The selector is always present, including AUTO-only operation.  That
+        # The selector is always present, including AUTO-only operation. That
         # guarantees that Nav2 and a joystick can never become two simultaneous
         # publishers directly feeding the CAN driver.
         Node(
@@ -67,8 +70,8 @@ def generate_launch_description():
             parameters=[params_file],
         ),
 
-        # joy_node only converts the Linux joystick device into sensor_msgs/Joy
-        # on /joy.  It does NOT publish Twist and does NOT select AUTO/MANUAL.
+        # ROS 2 joy_node converts an SDL joystick into sensor_msgs/Joy on /joy.
+        # It does NOT publish Twist and does NOT select AUTO/MANUAL.
         Node(
             package="joy",
             executable="joy_node",
@@ -76,7 +79,7 @@ def generate_launch_description():
             output="screen",
             condition=IfCondition(start_joy),
             parameters=[{
-                "dev": joy_device,
+                "device_id": ParameterValue(joy_device_id, value_type=int),
                 "deadzone": ParameterValue(joy_deadzone, value_type=float),
                 "autorepeat_rate": ParameterValue(
                     joy_autorepeat_rate, value_type=float
