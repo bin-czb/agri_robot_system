@@ -1348,10 +1348,12 @@ class AoaLocalizationNode(Node):
                     "[AOA] Horizontal projection clamped: "
                     f"r^2 - dz_tag^2 = {rho_sq:.4f} < 0 "
                     f"(r_slant={r_smooth:.3f} m, dz_tag={dz_tag:+.3f} m). "
-                    "Clamping rho_tag to 0. Check altitude source, "
+                    "Rejecting measurement. Check altitude source, "
                     "base_to_aoa_body_m, and AOA_TAG_OFFSET_BODY_M.")
                 self._projection_clamp_last_warn = now
-            rho_sq = 0.0
+            self._publish_aoa_measurement(
+                f, r_cal, azimuth_body_deg, GATE_RANGE_PHYSICS)
+            return
         rho_tag = math.sqrt(rho_sq)
         rho_opt_sq = r_cal * r_cal - dz_tag * dz_tag
         rho_opt = math.sqrt(rho_opt_sq) if rho_opt_sq >= 0.0 else None

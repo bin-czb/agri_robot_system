@@ -27,12 +27,13 @@ Publishes (optional, gated by publish_rtk_altitude parameter):
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import PoseStamped
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, String
 from pymavlink import mavutil
 import utm
 import time
 import threading
 import math
+import json
 from collections import deque
 from scipy.spatial.transform import Rotation as R
 
@@ -93,6 +94,10 @@ class UAVGPSNode(Node):
         self.rtk_min_fix_type = int(self.get_parameter('rtk_min_fix_type').value)
 
         self.publisher_ = self.create_publisher(PoseStamped, '/uav/utm_pose', 10)
+        self.health_publisher = self.create_publisher(
+            String, '/uav/localization_health', 10)
+        self.quality_fix_type = -1
+        self.quality_recv_time = None
         # The altitude publisher is always created (so ros2 topic tools
         # see it for discovery even when no RTK fix yet), but we only
         # actually publish to it while RTK is healthy AND the feature
@@ -169,9 +174,8 @@ class UAVGPSNode(Node):
                         time.sleep(2.0)
                         continue
 
-                recv_types = ['GLOBAL_POSITION_INT', 'ATTITUDE']
-                if self.publish_rtk_alt:
-                    recv_types.append('GPS_RAW_INT')
+                # Quality must be observed even when the optional height output is disabled.
+                recv_types = ['GLOBAL_POSITION_INT', 'ATTITUDE', 'GPS_RAW_INT']
 
                 msg = self.mav_conn.recv_match(
                     type=recv_types,
@@ -197,7 +201,10 @@ class UAVGPSNode(Node):
                     self.publish_pose(msg)
 
                 elif msg.get_type() == 'GPS_RAW_INT':
-                    self.handle_gps_raw(msg)
+                    self.quality_fix_type = int(msg.fix_type)
+                    self.quality_recv_time = time.monotonic()
+                    if self.publish_rtk_alt:
+                        self.handle_gps_raw(msg)
 
             except Exception as e:
                 self.get_logger().error(f'MAVLink loop error: {e}')
@@ -256,6 +263,18 @@ class UAVGPSNode(Node):
             pose_msg.pose.orientation.w = quat[3]
 
             self.publisher_.publish(pose_msg)
+            now_mono = time.monotonic()
+            self.health_publisher.publish(String(data=json.dumps({
+                'stamp_s': (pose_msg.header.stamp.sec
+                            + pose_msg.header.stamp.nanosec * 1e-9),
+                'fix_type': self.quality_fix_type,
+                'gps_age_s': (now_mono - self.quality_recv_time
+                              if self.quality_recv_time is not None else -1.0),
+                'attitude_age_s': (now_mono - self.att_recv_time
+                                   if self.att_valid else -1.0),
+                'time_basis': 'host_receive_time',
+                'position_source': 'GLOBAL_POSITION_INT',
+            }, allow_nan=False)))
 
         except Exception as e:
             self.get_logger().warn(f'Pose publish error: {e}')
@@ -381,7 +400,6 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
 
 
 

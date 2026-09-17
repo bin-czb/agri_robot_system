@@ -1,59 +1,40 @@
 # 底盘工作空间
 
-## 职责
+本工作空间保留机器人描述、公共 ROS 2 接口、EKF 和 Gazebo 仿真；**实车底盘控制只使用 `agri_chassis_can`**，对应 TD48150B-2E 双驱伺服控制器。旧串口/Modbus 和旧 CAN 控制包已从源码移除。
 
-本工作空间负责公共接口、机器人 URDF、底盘 Modbus/串口通信、速度控制、低速联调遥控、EKF 和 Gazebo 机器人环境。
+## 实车信息流
 
-## ROS 2 包
+```text
+Nav2 controller_server -> /cmd_vel_nav -> velocity_smoother -> /cmd_vel
+                                                               |
+手柄 -> joy_node -> /joy --------------------------------------|-> chassis_mode_teleop
+                                                                    -> /chassis/cmd_vel
+                                                                    -> agri_chassis_can
+                                                                    -> TD48150B-2E
 
-- `trunk_interfaces`：底盘、树干和 AOA 共用消息接口。
-- `agri_chassis_serial`：不依赖绝对路径的共享 Modbus RTU 实现。
-- `serial_bridge_ros2`：标准 `/cmd_vel` 到串口桥接。
-- `chassis_control`：现有底盘协议控制、状态和联调遥控。
-- `agri_robot_description`：机器人 URDF、传感器安装 TF。
-- `agri_robot_bringup`：EKF、仿真底盘和统一局部定位入口。
-- `trunk_gazebo_worlds`：果园 Gazebo 世界和机器人资源。
+TD48150B-2E 转速反馈 -> /wheel/odometry -> robot_localization EKF
+                                            -> /odometry/filtered 与 odom -> base_link
+```
 
-## 构建
+`chassis_mode_teleop` 是自动/手动速度的唯一选择点；CAN 驱动只订阅 `/chassis/cmd_vel`。实车驱动不发布 `odom -> base_link`，由 EKF 独占该 TF。仿真启动文件和 Gazebo 模型保留，其 `/cmd_vel` 桥接只用于仿真，不应与实车底盘启动文件同时运行。
+
+## 构建与安全联调
 
 ```bash
 cd /home/czb/agri_robot_system/chassis_ws
 source /opt/ros/humble/setup.bash
 colcon build --symlink-install
+source install/setup.bash
+ros2 launch agri_chassis_can chassis_bringup.launch.py listen_only:=true start_joy:=false
 ```
 
-## Gazebo 仿真
+首次联调保持 `listen_only:=true`，不发送 CAN 控制帧。先核对真实 CAN ID、通道 A/B 与左右履带对应、方向、反馈单位、减速比、有效轮径、等效轮距和手柄映射；确认前不要切换为主动控制。TD48150B 参数、话题、手柄测试和分阶段验证步骤见 [新底盘包说明](src/agri_chassis_can/README.md)，实际参数在 [`td48150b.yaml`](src/agri_chassis_can/config/td48150b.yaml)。
 
-```bash
-source /home/czb/agri_robot_system/scripts/source_all.bash
-ros2 launch agri_robot_bringup sim_bringup.launch.py
-```
+## 其他包
 
-## 实车底盘通信
+- `trunk_interfaces`：树干、AOA 等共享消息接口。
+- `agri_robot_description`：机器人模型与传感器安装 TF。
+- `agri_robot_bringup`：EKF 和仿真启动。
+- `trunk_gazebo_worlds`：果园仿真场景。
 
-底盘到货并核对通信点表后才能执行：
-
-```bash
-source /home/czb/agri_robot_system/scripts/source_all.bash
-ros2 launch chassis_control chassis_control.launch.py \
-  serial_port:=/dev/ttyUSB0 \
-  baud_rate:=115200 \
-  slave_id:=1 \
-  test_mode:=normal
-```
-
-## 低速联调遥控
-
-```bash
-ros2 launch chassis_control chassis_teleop.launch.py
-```
-
-另一个终端调用一次性服务：
-
-```bash
-ros2 service call /chassis_test/forward std_srvs/srv/Trigger '{}'
-ros2 service call /chassis_test/turn_left std_srvs/srv/Trigger '{}'
-ros2 service call /chassis_test/stop std_srvs/srv/Trigger '{}'
-```
-
-当前遥控只用于架空轮或空旷场地低速联调。正式遥控器、Nav2 和树行控制器接入后，必须增加 `/cmd_vel` 仲裁、急停和超时保护，禁止多个控制源直接同时驱动底盘。
+新底盘接入不会自动补齐导航路径跟踪、RTK/AOA 坐标标定或实车安全验证；这些仍需分别完成。

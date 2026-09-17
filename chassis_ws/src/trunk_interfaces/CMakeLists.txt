@@ -17,7 +17,6 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TrunkDetection.msg"
   "msg/TrunkLine.msg"
-  "msg/ChassisControl.msg"
   "msg/NavigationStatus.msg"
   "msg/AoaObservation.msg"
   "srv/SetNavigationMode.srv"

@@ -1,0 +1,39 @@
+localization_selector:
+  ros__parameters:
+    frame: map
+    # Release only after both inputs actually refer to the same projected map
+    # and physical point. Changing frame labels does NOT perform calibration.
+    alignment_verified: false
+    alignment_id: ""
+    reference_frame: sensor_rig
+    rtk_reference_frame: gps_link
+    aoa_reference_frame: sensor_rig
+    rtk_topic: /global_pose/rtk
+    aoa_topic: /global_pose/aoa_raw_map
+    rtk_evidence_topic: /rtk/fix
+    aoa_evidence_topic: /aoa/observation
+    uav_health_topic: /uav/localization_health
+    selected_topic: /global_pose/selected
+    status_topic: /global_pose/selection_status
+    usable_topic: /global_pose/usable
+    max_age: 0.6
+    future_tolerance: 0.05
+    qualify_time: 1.0
+    qualify_samples: 5
+    recovery_time: 3.0
+    min_dwell: 2.0
+    soft_failure_time: 0.3
+    max_speed: 2.0
+    gate_distance: 0.25
+    # Engineering score threshold, not a calibrated chi-square probability.
+    gate_score: 9.21
+    max_rtk_sigma: 0.30
+    max_aoa_sigma: 1.0
+    max_handover_jump: 0.75
+    anchor_timeout: 5.0
+    max_correction_age: 5.0
+    max_hdop: 2.5
+    max_uav_age: 0.5
+    max_aoa_yaw_sigma: 0.175
+    # Conservative unmodelled UAV/height/lever error, NOT measured calibration.
+    aoa_extra_sigma: 0.5
